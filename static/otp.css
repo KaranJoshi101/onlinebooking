@@ -1,0 +1,59 @@
+
+      *{
+        margin:0px;
+        padding:0px;
+      }
+      html{
+        scroll-behavior: smooth;
+        background-color: green;
+      }
+  
+      #otpp{
+        background-color: green;
+      }
+  
+      .otp-input{
+        border:none;
+        border-bottom:2px solid transparent;
+        border-radius: 0px; 
+        font-size: 1.1rem;
+        padding: 5px;
+        outline:none!important;
+        font-weight: 600;
+        text-align: center;
+        
+  
+      }
+      input:active, 
+      input:focus
+      {
+          outline:0px !important;
+          box-shadow: none !important;
+          border-bottom:2px solid red !important;
+        outline:none!important;
+      }
+  
+      /* Chrome, Safari, Edge, Opera */
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+  
+      /* Firefox */
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
+  
+  
+      #OTP_Div{
+        display: grid;
+        grid-template-columns: repeat(5, 20%);
+          grid-gap: 10px;
+          padding: 5%;
+      }
+          .p1 { text-align: center;
+    font-family: "Lucida Console", "Courier New", monospace;
+  }
+  
+ 
