@@ -1,0 +1,35 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+.top-cont {
+    margin-top: 40px;
+}
+
+#book-appointment {
+    text-align: center;
+}
+
+.select-box {
+    padding-top: 20px;
+}
+
+label {
+    display: block;
+    font:
+      1rem 'Fira Sans',
+      sans-serif;
+  }
+  
+  input,
+  label {
+    margin: 0.4rem 0;
+  }
+  
+#form-slot {
+    display: none;
+}  
+.select-detail-hospital{
+    display: block;
+}
