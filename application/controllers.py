@@ -18,6 +18,12 @@ from .models import *
 def index():
     return render_template('index.html')
 
+@app.route('/login', methods = ["GET","POST"])
+def login():
+    if request.method == "POST":
+        email = request.form.get('email')
+        password = request.form.get('password')
+
 @app.route('/register',methods=['GET','POST'])
 def register():
     if request.method=='POST':
@@ -77,14 +83,14 @@ def setPassword(userId):
     if request.method=='POST':
         password=request.form.get('pass')
         u.password=password
-        
+        db.session.commit()
         if(u.nMembers):
             return redirect(f'/{userId}/dashboard')
             
         return redirect(f'/{userId}/addMember')
     return render_template('set_password.html',user=u)
 
-@app.route('/<userId>/addMember')
+@app.route('/<userId>/addMember', methods = ["GET","POST"])
 def addMember(userId):
     u=User.query.get(userId)
     if request.method=='POST':
@@ -92,7 +98,7 @@ def addMember(userId):
         gender=request.form.get('gender')
         address=request.form.get('address')
         import datetime
-        p=Patient(name=name,gender=gender,location=address,d_added=datetime.datetime.now(),uid=userId)
+        p=Patient(id = idgen('P'),name=name,gender=gender,location=address,d_added=datetime.datetime.now(),uid=userId)
         db.session.add(p)
         u.verified=True
         db.session.commit()
