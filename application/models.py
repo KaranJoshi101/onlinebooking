@@ -1,1 +1,62 @@
 from .database import db
+class Hospital(db.Model):
+    id=db.Column(db.String(),primary_key=True)
+    name=db.Column(db.String())
+    location=db.Column(db.String())
+    nDept=db.Column(db.Integer)
+    rating=db.Column(db.Float)
+
+class Department(db.Model):
+    id=db.Column(db.String(),primary_key=True)
+    name=db.Column(db.String())
+    nDocs=db.Column(db.Integer)
+    rating=db.Column(db.Float)
+    hid=db.Column(db.String(),db.ForeignKey('hospital.id'))
+
+class Doctor(db.Model):
+    id=db.Column(db.String(),primary_key=True)
+    password=db.Column(db.String())
+    name=db.Column(db.String())
+    gender=db.Column(db.String(1))
+    qual=db.Column(db.String())
+    exp=db.Column(db.Integer)
+    photo=db.Column(db.String())
+
+class Patient(db.Model):
+    id=db.Column(db.String(),primary_key=True)
+    name=db.Column(db.String())
+    gender=db.Column(db.String(1))
+    location=db.Column(db.String())
+    record=db.Column(db.Text)
+    d_added=db.Column(db.DateTime)
+    uid=db.Column(db.String(),db.ForeignKey('user.id'))
+
+class Deptdoc(db.Model):
+    id=db.Column(db.String(),primary_key=True)
+    deptid=db.Column(db.String(),db.ForeignKey('department.id'))
+    docid=db.Column(db.String(),db.ForeignKey('doctor.id'))
+    days=db.Column(db.String())
+    slots=db.Column(db.Float)
+
+class Appointment(db.Model):
+    id=db.Column(db.String(),primary_key=True)
+    ddid=db.Column(db.String(),db.ForeignKey('deptdoc.id'))
+    date=db.Column(db.DateTime)
+    token=db.Column(db.Integer)
+
+class Patientlist(db.Model):
+    id=db.Column(db.String(),primary_key=True)
+    aid=db.Column(db.String(),db.ForeignKey('appointment.id'))
+    pid=db.Column(db.String(),db.ForeignKey('patient.id'))
+    status=db.Column(db.String())
+
+class User(db.Model):
+    id=db.Column(db.String(),primary_key=True)
+    password=db.Column(db.String())
+    phone=db.Column(db.Integer)
+    email=db.Column(db.String())
+    nMembers=db.Column(db.Integer)
+    d_created=db.Column(db.DateTime)
+    otp=db.Column(db.String())
+    verified=db.Column(db.Boolean)
+
