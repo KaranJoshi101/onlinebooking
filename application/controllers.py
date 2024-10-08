@@ -77,7 +77,7 @@ def setPassword(userId):
     if request.method=='POST':
         password=request.form.get('pass')
         u.password=password
-        
+        db.session.commit()
         if(u.nMembers):
             return redirect(f'/{userId}/dashboard')
             
