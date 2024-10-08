@@ -42,6 +42,7 @@ class Appointment(db.Model):
     id=db.Column(db.String(),primary_key=True)
     ddid=db.Column(db.String(),db.ForeignKey('deptdoc.id'))
     date=db.Column(db.DateTime)
+    availablility=db.Column(db.Boolean)
     token=db.Column(db.Integer)
 
 class Patientlist(db.Model):

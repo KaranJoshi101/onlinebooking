@@ -66,12 +66,40 @@ def otpVerify(userId):
         otp=request.form.get('one')+request.form.get('two')+request.form.get('three')+request.form.get('four')+request.form.get('five')+request.form.get('six')
         u=User.query.get(userId)
         if(u.otp==otp):
-            u.verified=True
-            db.session.commit()
-            if(u.nMembers):
-                return redirect(f'/{userId}/dashboard')
-            
-            return redirect(f'/{userId}/addMember')
+            return redirect(f'/{userId}/setPassword')
         else:
             flash('Wrong otp! Try again')
     return render_template('otp.html',u=u)
+
+@app.route('/<userId>/setPassword',methods=['GET','POST'])
+def setPassword(userId):
+    u=User.query.get(userId)
+    if request.method=='POST':
+        password=request.form.get('pass')
+        u.password=password
+        
+        if(u.nMembers):
+            return redirect(f'/{userId}/dashboard')
+            
+        return redirect(f'/{userId}/addMember')
+    return render_template('set_password.html',user=u)
+
+@app.route('/<userId>/addMember')
+def addMember(userId):
+    u=User.query.get(userId)
+    if request.method=='POST':
+        name=request.form.get('name')
+        gender=request.form.get('gender')
+        address=request.form.get('address')
+        import datetime
+        p=Patient(name=name,gender=gender,location=address,d_added=datetime.datetime.now(),uid=userId)
+        db.session.add(p)
+        u.verified=True
+        db.session.commit()
+        return render_template(f'/{userId}/dashboard')
+    return render_template('add_member.html',user=u)
+
+@app.route('/<userId>/dashboard')
+def userDashboard(userId):
+    u=User.query.get(userId)
+    return render_template('user_dash.html',user=u)
