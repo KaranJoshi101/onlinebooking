@@ -18,6 +18,23 @@ from .models import *
 def index():
     return render_template('index.html')
 
+@app.route('/login', methods = ["GET","POST"])
+def login():
+    if request.method == "POST":
+        email = request.form.get('email')
+        password = request.form.get('password')
+        u = User.query.filter_by(email=email).first()
+        if(u):
+            if(u.password == password):
+                return redirect(f'/{u.id}/dashboard')
+            else:
+                flash("Invalid Credentials")
+        else:
+            flash("Account does not exist.")
+
+    return render_template('login_page.html')       
+        
+
 @app.route('/register',methods=['GET','POST'])
 def register():
     if request.method=='POST':
@@ -84,7 +101,7 @@ def setPassword(userId):
         return redirect(f'/{userId}/addMember')
     return render_template('set_password.html',user=u)
 
-@app.route('/<userId>/addMember')
+@app.route('/<userId>/addMember', methods = ["GET","POST"])
 def addMember(userId):
     u=User.query.get(userId)
     if request.method=='POST':
@@ -92,7 +109,7 @@ def addMember(userId):
         gender=request.form.get('gender')
         address=request.form.get('address')
         import datetime
-        p=Patient(name=name,gender=gender,location=address,d_added=datetime.datetime.now(),uid=userId)
+        p=Patient(id = idgen('P'),name=name,gender=gender,location=address,d_added=datetime.datetime.now(),uid=userId)
         db.session.add(p)
         u.verified=True
         db.session.commit()
@@ -102,4 +119,25 @@ def addMember(userId):
 @app.route('/<userId>/dashboard')
 def userDashboard(userId):
     u=User.query.get(userId)
-    return render_template('user_dash.html',user=u)
+    patient=Patient.query.filter_by(uid=userId).first()
+    return render_template('user_dash.html',user=u,patient=patient)
+
+@app.route('/<pid>/book')
+def patientBook(pid):
+    states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chandigarh', 'Chhattisgarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Jammu and Kashmir', 'Karnataka', 'Kerala', 'Ladakh', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Puducherry', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand']
+    CITIES=[['Port Blair'],['Adoni', 'Amaravati', 'Anantapur', 'Chandragiri', 'Chittoor', 'Dowlaiswaram', 'Eluru', 'Guntur', 'Kadapa', 'Kakinada', 'Kurnool', 'Machilipatnam', 'Nagarjunakoṇḍa', 'Rajahmundry', 'Srikakulam', 'Tirupati', 'Vijayawada', 'Visakhapatnam', 'Vizianagaram', 'Yemmiganur'],['Itanagar'],]
+    cities={}
+    for i in range(len(CITIES)):
+        cities[states[i]]=CITIES[i]
+    print(cities)
+    return render_template('selecthost.html',states=states,cities=cities)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"),404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template("500.html"),500
+
+

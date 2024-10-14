@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Hospital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/selecthost.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container col-6 shadow p-3 mb-5 bg-body rounded top-cont  pb-5">
+        <h2 id="book-appointment" class="pt-3">Book Appointment</h2>
+        <button type="button" class="btn btn-dark btn-sm" id="form-slot-back"> > Back</button>
+        <div class="select-detail-hospital pt-5">
+            <form>
+                <div class="d-flex flex-column justify-content-center">
+                    <h5>Select State</h5>
+                    <select id="state" class="form-select" aria-label="Default select example" name=state required>
+                        <option value="" selected>Select State</option>
+                        {%for state in states%} 
+                        <option value="{{state}}">{{state}}</option>
+                        {%endfor%}
+                      </select>
+                </div>
+                <div class="d-flex flex-column justify-content-center select-box">
+                    <h5>Select City</h5>
+                    <select class="form-select" id="city" aria-label="Default select example" disabled>
+                        <option selected>Select City</option>
+                        {%for i in cities%}
+                            {%for j in cities[i]%}
+                            <option class="cities" id="{{i}}" value="{{j}}" style="display: none;">{{j}}</option>
+                            {%endfor%}
+                        {%endfor%}
+                      </select>
+                </div>
+                <div class="d-flex flex-column justify-content-center select-box">
+                    <h5>Select Hospital</h5>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>Select Hospital</option>
+                        <option value="1">AIIMS</option>
+                        <option value="2">Safdarjung</option>
+                        <option value="3">JNU Health Center</option>
+                      </select>
+                </div>
+                <div class="d-flex flex-column justify-content-center select-box">
+                    <h5>Select Center</h5>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>Select Center</option>
+                        <option value="1">Main Hospital</option>
+                        <option value="2">Sports Injury</option>
+                        <option value="3">Cancer Center</option>
+                      </select>
+                </div>
+                <div class="d-flex flex-column justify-content-center select-box">
+                    <h5>Select Department</h5>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>Select Department</option>
+                        <option value="1">Gastro</option>
+                        <option value="2">ENT</option>
+                        <option value="3">EYE</option>
+                      </select>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-success px-4 me-md-2 mt-4 select-slot-btn">Select Slot</button>
+                </div>    
+            </form>
+        </div>
+        
+
+        <div  id="form-slot">
+            <form>
+                <div class="d-flex flex-column justify-content-center select-box">
+                    <h5>Select Doctor</h5>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>Select Doctor</option>
+                        <option value="1">Tiwari Doctor</option>
+                        <option value="2">Karan Haakim</option>
+                        <option value="3">Utsav Daactar</option>
+                      </select>
+                </div>
+                <label for="meeting-time" class="pt-3"><h5>Choose a time for your appointment:</h5></label>
+                <input
+                  type="datetime-local"
+                  id="meeting-time"
+                  name="meeting-time"
+                  value="2018-06-12T19:30"
+                  min="2018-06-07T00:00"
+                  max="2018-06-14T00:00" />
+                  <br>
+                <div class="d-flex justify-content-end pt-5">
+                    <button type="button" class="btn btn-success px-4 me-md-2 select-book-btn mt-5">Book Appointment</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="form-thank">
+            <div class="d-flex flex-column justify-content-center align-items-center pt-5 pb-5">
+                <h3>Your appointment has been successfully booked</h3>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary px-4 me-md-2 select-slot-btn mt-3">View / Print Appointment</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="/static/selecthost.js"></script>
+</body>
+</html>

@@ -2,7 +2,8 @@ from .database import db
 class Hospital(db.Model):
     id=db.Column(db.String(),primary_key=True)
     name=db.Column(db.String())
-    location=db.Column(db.String())
+    state=db.Column(db.String())
+    city=db.Column(db.String())
     nDept=db.Column(db.Integer)
     rating=db.Column(db.Float)
 
@@ -26,7 +27,8 @@ class Patient(db.Model):
     id=db.Column(db.String(),primary_key=True)
     name=db.Column(db.String())
     gender=db.Column(db.String(1))
-    location=db.Column(db.String())
+    state=db.Column(db.String())
+    city=db.Column(db.String())
     record=db.Column(db.Text)
     d_added=db.Column(db.DateTime)
     uid=db.Column(db.String(),db.ForeignKey('user.id'))

@@ -4,11 +4,12 @@
 }
 
 .top-cont {
-    margin-top: 40px;
+    margin-top: 60px;
 }
 
 #book-appointment {
     text-align: center;
+    color: green;
 }
 
 .select-box {
@@ -29,7 +30,14 @@ label {
   
 #form-slot {
     display: none;
+} 
+#form-slot-back {
+    display: none;
 }  
+
+#form-thank {
+    display: none;
+}   
 .select-detail-hospital{
     display: block;
 }
