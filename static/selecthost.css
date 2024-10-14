@@ -4,11 +4,19 @@
 }
 
 .top-cont {
+<<<<<<< HEAD
     margin-top: 40px;
+=======
+    margin-top: 60px;
+>>>>>>> 5bd2b2db9a974001e084626831d41545c84e1e88
 }
 
 #book-appointment {
     text-align: center;
+<<<<<<< HEAD
+=======
+    color: green;
+>>>>>>> 5bd2b2db9a974001e084626831d41545c84e1e88
 }
 
 .select-box {
@@ -29,7 +37,18 @@ label {
   
 #form-slot {
     display: none;
+<<<<<<< HEAD
 }  
+=======
+} 
+#form-slot-back {
+    display: none;
+}  
+
+#form-thank {
+    display: none;
+}   
+>>>>>>> 5bd2b2db9a974001e084626831d41545c84e1e88
 .select-detail-hospital{
     display: block;
 }
