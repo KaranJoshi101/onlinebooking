@@ -1,0 +1,59 @@
+{%extends 'base.html'%}
+{%block content%}
+<div class="container col-6 shadow p-3 mb-5 bg-body rounded top-cont  pb-5 mt-5">
+    <div class="text-center d-flex justify-content-between mb-5" >
+        <div></div>
+        <h2 style="font-family: sans-serif; font-weight: bold;">{{hospital.name}}</h2>
+    
+    <div class="text-end"><a href="/admin/dashboard" type="button" class="btn btn-dark btn-sm px-3" id="form-slot-back"> > Exit</a></div>
+    </div>
+    
+    <h4 class="pl-5" style="font-family: sans-serif; font-weight: bold;">{{department.name}} Department</h4>
+        <h5 class="pt-2 pl-5">Add Doctor</h5>
+    
+   
+    
+    <div class="select-detail-hospital pt-5 px-5">
+        <form action="/{{hospital.id}}/{{department.id}}/doc/create" enctype="multipart/form-data" method="post">
+            <div class="mb-3">
+                <h5>Doctor Name</h5>
+                <input name="name" type="text" class="form-control" id="exampleInputName1" aria-describedby="NameHelp">
+              </div>
+              <div class="mb-3">
+                <h5>Email</h5>
+                <input name="email" type="email" class="form-control" id="exampleInputName1" aria-describedby="NameHelp">
+              </div>
+              <div class="mb-3">
+                <h5>Password</h5>
+                <input name="pass" type="password" class="form-control" id="exampleInputName1" aria-describedby="NameHelp">
+              </div>
+              <div class="mb-3">
+                <h5>Gender</h5>
+                <select class="form-select" aria-label="Default select example" name='gender' required>
+                    <option value="" selected>Select Gender</option>
+                    <option value="M">MALE</option>
+                    <option value="F" >FEMALE</option>
+                    <option value="O">OTHERS</option>
+
+                </select>
+              </div>
+              <div class="mb-3">
+                <h5>Qualification Details</h5>
+                <input name="qual" type="textarea" class="form-control" id="exampleInputName1" aria-describedby="NameHelp">
+              </div>
+              <div class="mb-3">
+                <h5>Experience(in years)</h5>
+                <input name="exp" type="number" class="form-control" id="exampleInputName1" aria-describedby="NameHelp">
+              </div>
+              <div class="mb-3">
+                <h5>Profile Picture</h5>
+             
+                    <input class="form-control" type="file" id="formFile" name="profile">
+              </div>
+              
+
+              <div class="text-center mt-4"><button type="submit" class="btn btn-success px-5">Add</button></div>
+            </form>
+    </div>
+</div>
+{%endblock%}

@@ -1,0 +1,21 @@
+{%extends 'base.html'%}
+{%block content%}
+<div class="container col-6 shadow p-3 mb-5 bg-body rounded top-cont  pb-5 mt-5">
+    <h4>{{hospital.name}}</h4>
+    <div class="d-flex justify-content-between">
+        <div></div>
+        <h2 id="book-appointment" class="pt-3 text-center fw-bold">Create Department</h2>
+    <div class="text-end"><a href="/admin/dashboard" type="button" class="btn btn-dark btn-sm" id="form-slot-back"> > Exit</a></div>
+    </div>
+    
+    <div class="select-detail-hospital pt-5 px-5">
+        <form action="/{{hospital.id}}/department/create" method="post">
+            <div class="mb-3">
+                <h5>Department Name</h5>
+                <input name="name" type="text" class="form-control" id="exampleInputName1" aria-describedby="NameHelp">
+              </div>
+              <div class="text-center mt-4"><button type="submit" class="btn btn-success px-5">Add</button></div>
+            </form>
+                </div>
+                </div>
+{%endblock%}

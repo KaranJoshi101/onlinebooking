@@ -4,18 +4,19 @@ class Hospital(db.Model):
     name=db.Column(db.String())
     state=db.Column(db.String())
     city=db.Column(db.String())
-    nDept=db.Column(db.Integer)
-    rating=db.Column(db.Float)
+    nDept=db.Column(db.Integer,default=0)
+    rating=db.Column(db.Float,default=0)
 
 class Department(db.Model):
     id=db.Column(db.String(),primary_key=True)
     name=db.Column(db.String())
-    nDocs=db.Column(db.Integer)
+    nDoc=db.Column(db.Integer,default=0)
     rating=db.Column(db.Float)
     hid=db.Column(db.String(),db.ForeignKey('hospital.id'))
 
 class Doctor(db.Model):
     id=db.Column(db.String(),primary_key=True)
+    email=db.Column(db.String())
     password=db.Column(db.String())
     name=db.Column(db.String())
     gender=db.Column(db.String(1))
