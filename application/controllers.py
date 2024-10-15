@@ -10,6 +10,9 @@ def idgen(i):
     from uuid import uuid4
     return i+str(uuid4())[:5]
 
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif','webp'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chandigarh', 'Chhattisgarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Jammu and Kashmir', 'Karnataka', 'Kerala', 'Ladakh', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Puducherry', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand']
 CITIES=[['Port Blair'],['Adoni', 'Amaravati', 'Anantapur', 'Chandragiri', 'Chittoor', 'Dowlaiswaram', 'Eluru', 'Guntur', 'Kadapa', 'Kakinada', 'Kurnool', 'Machilipatnam', 'Nagarjunakoṇḍa', 'Rajahmundry', 'Srikakulam', 'Tirupati', 'Vijayawada', 'Visakhapatnam', 'Vizianagaram', 'Yemmiganur'],['Itanagar'],]
@@ -17,8 +20,14 @@ cities={}
 for i in range(len(CITIES)):
     cities[states[i]]=CITIES[i]
 
-from flask import Flask,render_template, redirect, request,url_for,flash
+#methods imported from flask module
+from flask import Flask,render_template, redirect, request,url_for, flash
+from werkzeug.utils import secure_filename
 from flask import current_app as app
+import uuid as uuid
+import os
+
+#models content imported in this file
 from .models import *
 
 @app.route('/')
@@ -46,7 +55,10 @@ def login():
         
 @app.route('/admin/dashboard',methods=['GET','POST'])
 def adminDashboard():
-    return render_template('admin_dash.html',hospitals=Hospital.query.all(),doctors=Doctor.query.all(),departments=Department.query.all())
+    deptdocs=[]
+    for i in Deptdoc.query.all():
+        deptdocs.append((i,Doctor.query.get(i.docid)))
+    return render_template('admin_dash.html',hospitals=Hospital.query.all(),deptdocs=deptdocs,departments=Department.query.all())
 
 @app.route('/hospital/create',methods=['GET','POST'])
 def hospitalCreate():
@@ -70,8 +82,39 @@ def deptCreate(hId):
     
     return render_template('dept_create.html',hospital=hospital)
 
-@app.route('/<hid>/<deptid>/doctor/create')
+@app.route('/<hid>/<deptid>/doctor/create',methods=['GET','POST'])
 def docCreate(hid,deptid):
+    if request.method=='POST':
+        s=Doctor(id=idgen('Do'),name=request.form.get('name'),gender=request.form.get('gender'),exp=request.form.get('exp'),qual=request.form.get('qual'),email=request.form.get('email'),password=request.form.get('pass'))
+        db.session.add(s)
+        Department.query.get(deptid).nDoc+=1
+        d=Deptdoc(id=idgen('DD'),deptid=deptid,docid=s.id)
+        db.session.add(d)
+        file=request.files["photo"]
+        if(file):
+            max_size = 1024 * 1024
+    
+            print('yes')
+
+            if file and allowed_file(file.filename):
+                # Process the file (e.g., save it)
+                if len(file.read()) > max_size:
+                    flash('Image size too large!')
+                else:
+                    file.seek(0)
+                    s.photo=file
+                    dp=secure_filename(s.photo.filename)
+                    photo=str(uuid.uuid1())+"_"+dp
+                    s.photo.save(os.path.join(app.config['UPLOAD_FOLDER'],photo))
+                    s.photo=photo
+                    db.session.commit()
+                    print('wow')
+                    return redirect('/admin/dashboard')
+            else:
+                flash('Invalid image type')
+        else:
+            db.session.commit()
+            return redirect('/admin/dashboard')
     return render_template('doc_create.html',hospital=Hospital.query.get(hid),department=Department.query.get(deptid))
 
 

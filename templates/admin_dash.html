@@ -29,7 +29,7 @@
                 <a class="nav-link" href="#">Summary</a>
               </li>
             </ul>
-              <button class="btn btn-outline-danger" type="submit">Log Out</button>
+              <a type="button" href="/" class="btn btn-outline-danger" >Log Out</a>
           </div>
         </div>
     </nav>
@@ -111,7 +111,7 @@
       {%else%}
       <h5>Oops! No departments added yet.</h5>
       {%endif%}
-      <a href="/{{hospital.id}}/department/create">Add a department</a>
+      <a href="/{{hospital.id}}/department/create">+Add a department</a>
       </div>
       {%endfor%}
       <br><br>
@@ -146,9 +146,9 @@
             <td>{{doc.email}}</td>
             <td>{{doc.name}}</td>
             <td>{{doc.gender}}</td>
-            <td>{{doc.qualification}}</td>
-            <td>{{doc.experience}}</td>
-            <td><a href="/{{doc.id}}/approve">Approve</a> <a href="/{{doc.id}}/reject" style="color:red">Reject</a></td>
+            <td>{{doc.qual}}</td>
+            <td>{{doc.exp}}</td>
+            <td><a href="/{{doc.id}}/modify">Modify</a> <a href="/{{doc.id}}/delete" style="color:red">Delete</a></td>
           </tr>
           {%endif%}
         {%endfor%}
@@ -157,7 +157,7 @@
       {%else%}
       <h5>Oops! No doctors added yet.</h5>
       {%endif%}
-      <a href="/{{department.hid}}/{{department.id}}/doctor/create">Add a doctor</a>
+      <a href="/{{department.hid}}/{{department.id}}/doctor/create">+Add a doctor</a>
       </div>
       {%endfor%}
          
