@@ -207,9 +207,11 @@ def userDashboard(userId):
 
 @app.route('/<pid>/book')
 def patientBook(pid):
-    
+    deptdocs=[]
+    for i in Deptdoc.query.all():
+        deptdocs.append((i,Doctor.query.get(i.docid)))
     global states,cities
-    return render_template('selecthost.html',states=states,cities=cities)
+    return render_template('selecthost.html',states=states,cities=cities,hospitals=Hospital.query.all(),departments=Department.query.all(),deptdocs=deptdocs)
 
 @app.errorhandler(404)
 def page_not_found(e):

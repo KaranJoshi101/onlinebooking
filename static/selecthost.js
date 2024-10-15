@@ -1,4 +1,16 @@
 // select-detail-hospital;
+const classmaking=(s)=>{
+    let snew='';
+    for(let i of s){
+        if(i==' '){
+            snew+='.'
+        }
+        else{
+            snew+=i
+        }
+    }
+    return snew;
+}
 
 select_slot_btn = document.querySelector(".select-slot-btn");
 select_detail_hospital = document.querySelector(".select-detail-hospital");
@@ -29,6 +41,34 @@ select_book_btn.addEventListener("click",()=>{
 
 })
 
+let hospital=document.querySelector('#hospital');
+city.addEventListener('click',()=>{
+    if(city.value){
+        hospital.removeAttribute('disabled')
+        h=document.querySelectorAll(`.${classmaking(city.value)}`)
+        for(i of h){
+            i.style.display='block';
+        }
+    }
+})
 
-
-
+let dept=document.querySelector('#dept');
+hospital.addEventListener('click',()=>{
+    if(hospital.value){
+        dept.removeAttribute('disabled')
+        h=document.querySelectorAll(`.${classmaking(hospital.value)}`)
+        for(i of h){
+            i.style.display='block';
+        }
+    }
+})
+let doctor=document.querySelector('#doctor');
+dept.addEventListener('click',()=>{
+    if(dept.value){
+        doctor.removeAttribute('disabled')
+        h=document.querySelectorAll(`.${classmaking(dept.value)}`)
+        for(i of h){
+            i.style.display='block';
+        }
+    }
+})

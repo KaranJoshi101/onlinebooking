@@ -26,7 +26,7 @@
                 <div class="d-flex flex-column justify-content-center select-box">
                     <h5>Select City</h5>
                     <select class="form-select" id="city" aria-label="Default select example" disabled>
-                        <option selected>Select City</option>
+                        <option value="" selected>Select City</option>
                         {%for i in cities%}
                             {%for j in cities[i]%}
                             <option class="cities" id="{{i}}" value="{{j}}" style="display: none;">{{j}}</option>
@@ -36,33 +36,25 @@
                 </div>
                 <div class="d-flex flex-column justify-content-center select-box">
                     <h5>Select Hospital</h5>
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected>Select Hospital</option>
-                        <option value="1">AIIMS</option>
-                        <option value="2">Safdarjung</option>
-                        <option value="3">JNU Health Center</option>
-                      </select>
-                </div>
-                <div class="d-flex flex-column justify-content-center select-box">
-                    <h5>Select Center</h5>
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected>Select Center</option>
-                        <option value="1">Main Hospital</option>
-                        <option value="2">Sports Injury</option>
-                        <option value="3">Cancer Center</option>
+                    <select class="form-select" id="hospital" aria-label="Default select example" disabled>
+                        <option value="" selected>Select Hospital</option>
+                        {%for hospital in hospitals%}
+                            <option class="{{hospital.city}}"  value="{{hospital.id}}" style="display: none;">{{hospital.name}}</option>
+                            
+                        {%endfor%}
                       </select>
                 </div>
                 <div class="d-flex flex-column justify-content-center select-box">
                     <h5>Select Department</h5>
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected>Select Department</option>
-                        <option value="1">Gastro</option>
-                        <option value="2">ENT</option>
-                        <option value="3">EYE</option>
+                    <select class="form-select" id="dept" aria-label="Default select example" disabled>
+                        <option value="" selected>Select Department</option>
+                        {%for department in departments%}
+                            <option class="{{department.hid}}" style="display: none;" value="{{department.id}}">{{department.name}}</option>
+                        {%endfor%}
                       </select>
                 </div>
                 <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-success px-4 me-md-2 mt-4 select-slot-btn">Select Slot</button>
+                    <button type="button" class="btn btn-success px-4 me-md-2 mt-4 select-slot-btn">Next></button>
                 </div>    
             </form>
         </div>
@@ -72,11 +64,11 @@
             <form>
                 <div class="d-flex flex-column justify-content-center select-box">
                     <h5>Select Doctor</h5>
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected>Select Doctor</option>
-                        <option value="1">Tiwari Doctor</option>
-                        <option value="2">Karan Haakim</option>
-                        <option value="3">Utsav Daactar</option>
+                    <select class="form-select" id="doctor" aria-label="Default select example" disabled>
+                        <option value="" selected>Select Doctor</option>
+                        {%for deptdoc,doc in deptdocs%}
+                            <option class="{{deptdoc.deptid}}" value="{{deptdoc.id}}" style="display: none;">{{doc.name}}</option>
+                        {%endfor%}
                       </select>
                 </div>
                 <label for="meeting-time" class="pt-3"><h5>Choose a time for your appointment:</h5></label>

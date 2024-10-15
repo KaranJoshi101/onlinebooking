@@ -1,5 +1,5 @@
 let state=document.querySelector('#state');
-let city=document.querySelector('#city');
+var city=document.querySelector('#city');
     state.addEventListener('click',()=>{
         if(state.value){
         
