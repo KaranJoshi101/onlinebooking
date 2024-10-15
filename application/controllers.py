@@ -10,6 +10,13 @@ def idgen(i):
     from uuid import uuid4
     return i+str(uuid4())[:5]
 
+
+states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chandigarh', 'Chhattisgarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Jammu and Kashmir', 'Karnataka', 'Kerala', 'Ladakh', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Puducherry', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand']
+CITIES=[['Port Blair'],['Adoni', 'Amaravati', 'Anantapur', 'Chandragiri', 'Chittoor', 'Dowlaiswaram', 'Eluru', 'Guntur', 'Kadapa', 'Kakinada', 'Kurnool', 'Machilipatnam', 'Nagarjunakoṇḍa', 'Rajahmundry', 'Srikakulam', 'Tirupati', 'Vijayawada', 'Visakhapatnam', 'Vizianagaram', 'Yemmiganur'],['Itanagar'],]
+cities={}
+for i in range(len(CITIES)):
+    cities[states[i]]=CITIES[i]
+
 from flask import Flask,render_template, redirect, request,url_for,flash
 from flask import current_app as app
 from .models import *
@@ -23,6 +30,9 @@ def login():
     if request.method == "POST":
         email = request.form.get('email')
         password = request.form.get('password')
+        
+        if(email=='iamadmin@gmail.com' and password=='123'):
+            return redirect('/admin/dashboard')
         u = User.query.filter_by(email=email).first()
         if(u):
             if(u.password == password):
@@ -34,6 +44,36 @@ def login():
 
     return render_template('login_page.html')       
         
+@app.route('/admin/dashboard',methods=['GET','POST'])
+def adminDashboard():
+    return render_template('admin_dash.html',hospitals=Hospital.query.all(),doctors=Doctor.query.all(),departments=Department.query.all())
+
+@app.route('/hospital/create',methods=['GET','POST'])
+def hospitalCreate():
+    if request.method=='POST':
+        h=Hospital(id=idgen('H'),name=request.form.get('name'),state=request.form.get('state'),city=request.form.get('city'))
+        db.session.add(h)
+        db.session.commit()
+        return redirect('/admin/dashboard')
+    global states,cities
+    return render_template('hosp_create.html',states=states,cities=cities)
+
+@app.route("/<hId>/department/create",methods=['GET','POST'])
+def deptCreate(hId):
+    hospital=Hospital.query.get(hId)
+    if request.method=='POST':
+        h=Department(id=idgen('D'),name=request.form.get('name'),hid=hId)
+        hospital.nDept+=1
+        db.session.add(h)
+        db.session.commit()
+        return redirect('/admin/dashboard')
+    
+    return render_template('dept_create.html',hospital=hospital)
+
+@app.route('/<hid>/<deptid>/doctor/create')
+def docCreate(hid,deptid):
+    return render_template('doc_create.html',hospital=Hospital.query.get(hid),department=Department.query.get(deptid))
+
 
 @app.route('/register',methods=['GET','POST'])
 def register():
@@ -124,12 +164,8 @@ def userDashboard(userId):
 
 @app.route('/<pid>/book')
 def patientBook(pid):
-    states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chandigarh', 'Chhattisgarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Jammu and Kashmir', 'Karnataka', 'Kerala', 'Ladakh', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Puducherry', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand']
-    CITIES=[['Port Blair'],['Adoni', 'Amaravati', 'Anantapur', 'Chandragiri', 'Chittoor', 'Dowlaiswaram', 'Eluru', 'Guntur', 'Kadapa', 'Kakinada', 'Kurnool', 'Machilipatnam', 'Nagarjunakoṇḍa', 'Rajahmundry', 'Srikakulam', 'Tirupati', 'Vijayawada', 'Visakhapatnam', 'Vizianagaram', 'Yemmiganur'],['Itanagar'],]
-    cities={}
-    for i in range(len(CITIES)):
-        cities[states[i]]=CITIES[i]
-    print(cities)
+    
+    global states,cities
     return render_template('selecthost.html',states=states,cities=cities)
 
 @app.errorhandler(404)
