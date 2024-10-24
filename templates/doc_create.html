@@ -28,6 +28,33 @@
                 <input name="pass" type="password" class="form-control"  aria-describedby="NameHelp">
               </div>
               <div class="mb-3">
+                <h5>Available Day & Slot</h5>
+                <select class="form-select" aria-label="Default select example" name='day' required>
+                    <option value="" selected>Select Day</option>
+                    <option value="0">Monday</option>
+                    <option value="1">Tueday</option>
+                    <option value="2">Wednesday</option>
+                    <option value="3">Thursday</option>
+                    <option value="4">Friday</option>
+                    <option value="5">Saturday</option>
+                    <option value="6">Sunday</option>
+
+                </select>
+                
+              </div>
+              <div class="mb-3 d-flex justify-content-between">
+                <div>
+                  <label for="start">From : </label>
+                <input id="start" type="time" name="from">
+                </div>
+                <div>
+                  <label for="end">To : </label>
+                <input id="end" type="time" name="to">
+                </div>
+                <div></div>
+                
+              </div>
+              <div class="mb-3">
                 <h5>Gender</h5>
                 <select class="form-select" aria-label="Default select example" name='gender' required>
                     <option value="" selected>Select Gender</option>
@@ -54,6 +81,8 @@
               {%for message in get_flashed_messages()%}
               <p style="color:red;font-size: small;">{{message}}</p>
               {%endfor%}
+
+              
               <div class="text-center mt-4"><button type="submit" class="btn btn-success px-5">Add</button></div>
             </form>
     </div>

@@ -42,6 +42,9 @@ def login():
         
         if(email=='iamadmin@gmail.com' and password=='123'):
             return redirect('/admin/dashboard')
+        d=Doctor.query.filter_by(email=email).first()
+        if(d):
+            return redirect(f'/{d.id}/doctor/dashboard')
         u = User.query.filter_by(email=email).first()
         if(u):
             if(u.password == password):
@@ -87,14 +90,20 @@ def docCreate(hid,deptid):
     if request.method=='POST':
         s=Doctor(id=idgen('Do'),name=request.form.get('name'),gender=request.form.get('gender'),exp=request.form.get('exp'),qual=request.form.get('qual'),email=request.form.get('email'),password=request.form.get('pass'))
         db.session.add(s)
+        import datetime
+        from_=request.form.get('from').split(':')
+        to=request.form.get('to').split(':')
         Department.query.get(deptid).nDoc+=1
         d=Deptdoc(id=idgen('DD'),deptid=deptid,docid=s.id)
         db.session.add(d)
+        day=Days(id=idgen('DA'),ddid=d.id,day=request.form.get('day'))
+        db.session.add(day)
+        slot=Slots(id=idgen('SL'),daysid=day.id,from_=datetime.time(int(from_[0]),int(from_[1])),to=datetime.time(int(to[0]),int(to[1])))
+        db.session.add(slot)
         file=request.files["photo"]
         if(file):
             max_size = 1024 * 1024
     
-            print('yes')
 
             if file and allowed_file(file.filename):
                 # Process the file (e.g., save it)
@@ -107,8 +116,8 @@ def docCreate(hid,deptid):
                     photo=str(uuid.uuid1())+"_"+dp
                     s.photo.save(os.path.join(app.config['UPLOAD_FOLDER'],photo))
                     s.photo=photo
+                    
                     db.session.commit()
-                    print('wow')
                     return redirect('/admin/dashboard')
             else:
                 flash('Invalid image type')
@@ -190,28 +199,36 @@ def addMember(userId):
     if request.method=='POST':
         name=request.form.get('name')
         gender=request.form.get('gender')
-        address=request.form.get('address')
+        state=request.form.get('state')
+        city=request.form.get('city')
         import datetime
-        p=Patient(id = idgen('P'),name=name,gender=gender,location=address,d_added=datetime.datetime.now(),uid=userId)
+        p=Patient(id = idgen('P'),name=name,gender=gender,state=state,city=city,d_added=datetime.datetime.now(),uid=userId)
         db.session.add(p)
         u.verified=True
         db.session.commit()
-        return render_template(f'/{userId}/dashboard')
-    return render_template('add_member.html',user=u)
+        return redirect(f'/{userId}/dashboard')
+    global states,cities
+    return render_template('add_member.html',user=u,states=states,cities=cities)
 
 @app.route('/<userId>/dashboard')
 def userDashboard(userId):
     u=User.query.get(userId)
-    patient=Patient.query.filter_by(uid=userId).first()
-    return render_template('user_dash.html',user=u,patient=patient)
-
-@app.route('/<pid>/book')
-def patientBook(pid):
+    patients=Patient.query.filter_by(uid=userId).all()
     deptdocs=[]
     for i in Deptdoc.query.all():
         deptdocs.append((i,Doctor.query.get(i.docid)))
     global states,cities
-    return render_template('selecthost.html',states=states,cities=cities,hospitals=Hospital.query.all(),departments=Department.query.all(),deptdocs=deptdocs)
+    return render_template('user_dash.html',user=u,patients=patients,states=states,cities=cities,hospitals=Hospital.query.all(),departments=Department.query.all(),deptdocs=deptdocs)
+
+@app.route('/<docid>/doctor/dashboard')
+def doctorDashboard(docid): 
+    deptdocs=[]
+    for d in Deptdoc.query.all():
+        if d.docid==docid:
+            dept=Department.query.get(d.deptid)
+            deptdocs.append((Hospital.query.get(dept.hid),dept,d))
+    return render_template('doctor_dash.html',doctor=Doctor.query.get(docid),deptdocs=deptdocs)
+
 
 @app.errorhandler(404)
 def page_not_found(e):

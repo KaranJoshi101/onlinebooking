@@ -38,8 +38,6 @@ class Deptdoc(db.Model):
     id=db.Column(db.String(),primary_key=True)
     deptid=db.Column(db.String(),db.ForeignKey('department.id'))
     docid=db.Column(db.String(),db.ForeignKey('doctor.id'))
-    days=db.Column(db.String())
-    slots=db.Column(db.Float)
 
 class Appointment(db.Model):
     id=db.Column(db.String(),primary_key=True)
@@ -63,4 +61,15 @@ class User(db.Model):
     d_created=db.Column(db.DateTime)
     otp=db.Column(db.String())
     verified=db.Column(db.Boolean)
+
+class Days(db.Model):
+    id=db.Column(db.String(),primary_key=True)
+    ddid=db.Column(db.String(),db.ForeignKey('deptdoc.id'))
+    day=db.Column(db.Integer)
+
+class Slots(db.Model):
+    id=db.Column(db.String(),primary_key=True)
+    daysid=db.Column(db.String(),db.ForeignKey('days.id'))
+    from_=db.Column(db.Time)
+    to=db.Column(db.Time)
 
