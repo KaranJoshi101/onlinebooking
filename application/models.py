@@ -42,22 +42,23 @@ class Deptdoc(db.Model):
 class Appointment(db.Model):
     id=db.Column(db.String(),primary_key=True)
     ddid=db.Column(db.String(),db.ForeignKey('deptdoc.id'))
-    date=db.Column(db.DateTime)
-    availablility=db.Column(db.Boolean)
-    token=db.Column(db.Integer)
+    date=db.Column(db.Date)
+    slotid=db.Column(db.String(),db.ForeignKey('slots.id'))
+    availablility=db.Column(db.Boolean,default=True)
+    token=db.Column(db.Integer,default=0)
 
 class Patientlist(db.Model):
     id=db.Column(db.String(),primary_key=True)
     aid=db.Column(db.String(),db.ForeignKey('appointment.id'))
     pid=db.Column(db.String(),db.ForeignKey('patient.id'))
-    status=db.Column(db.String())
+    status=db.Column(db.String(),default='booked')
 
 class User(db.Model):
     id=db.Column(db.String(),primary_key=True)
     password=db.Column(db.String())
     phone=db.Column(db.Integer)
     email=db.Column(db.String())
-    nMembers=db.Column(db.Integer)
+    nMembers=db.Column(db.Integer,default=0)
     d_created=db.Column(db.DateTime)
     otp=db.Column(db.String())
     verified=db.Column(db.Boolean)

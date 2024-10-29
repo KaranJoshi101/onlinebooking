@@ -2,6 +2,7 @@ let appointmentBtn=document.querySelector('#appointmentBtn');
 let profileBtn=document.querySelector('#profileBtn');
 let bookAppointmentBtn=document.querySelector('#bookAppointmentBtn');
 
+
 let appointment=document.querySelector('#appointment');
 let bookAppointment=document.querySelector('#bookAppointment');
 let profile=document.querySelector('#profile');

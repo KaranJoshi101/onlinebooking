@@ -104,46 +104,55 @@
                       </select>
                 </div>
                 <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-success px-4 me-md-2 mt-4 select-slot-btn">Next></button>
+                    <button type="button" class="btn btn-success px-4 me-md-2 mt-4 select-slot-btn" id="nextBtn" disabled>Next></button>
                 </div>    
             </form>
         </div>
         
 
         <div  id="form-slot">
-            <form>
+            <form action="/{{user.id}}/book" method="post">
                 <div class="d-flex flex-column justify-content-center select-box">
                     <h5>Select Doctor</h5>
-                    <select class="form-select" id="doctor" aria-label="Default select example" disabled>
+                    <select class="form-select" id="doctor" name="deptdoc" aria-label="Default select example" disabled>
                         <option value="" selected>Select Doctor</option>
                         {%for deptdoc,doc in deptdocs%}
-                            <option class="{{deptdoc.deptid}}" value="{{deptdoc.id}}" style="display: none;">{{doc.name}}</option>
+                            <option class="{{deptdoc.deptid}}" value="{{deptdoc.id}}" style="display: none;">Dr. {{doc.name}}</option>
                         {%endfor%}
                       </select>
                 </div>
-                <label for="meeting-time" class="pt-3"><h5>Choose a time for your appointment:</h5></label>
+                <div class="mb-5">
+                  <label for="meeting-time" class="pt-3"><h5>Select Date</h5></label>
                 <input
-                  type="datetime-local"
-                  id="meeting-time"
-                  name="meeting-time"
-                  value="2018-06-12T19:30"
-                  min="2018-06-07T00:00"
-                  max="2018-06-14T00:00" />
-                  <br>
+                  type="date"
+                  id="bookdate"
+                  name="bookdate"
+                  
+                  min="{{date.date()}}"
+                  max="{{vdate.date()}}" />
+                </div>
+                <div class="d-flex flex-column justify-content-center select-box">
+                  <h5>Select Slot</h5>
+                  <select class="form-select" id="slot" aria-label="Default select example" name="slot" disabled>
+                      <option value="" selected>Select Slot</option>
+                      {%for days,slot in slots%}
+                          <option id="{{days.day}}" class="{{days.ddid}}" value="{{slot.id}}" style="display: none;">{{slot.from_.strftime("%I:%M%p")}} - {{slot.to.strftime("%I:%M%p")}}</option>
+                      {%endfor%}
+                    </select>
+              </div>
+                
+                  {%for doc,deptdoc,days in docdays%}
+                <p id='{{deptdoc.id}}' class="docDay text-center " style="display: none; font-weight: bold;font-stretch:expanded;color: green;">Dr. {{doc.name}} is available on {{days|join(",")}} </p>
+                  {%endfor%}
+
+                <input id="patient" name="patient" type="text" style="display: none;">  
                 <div class="d-flex justify-content-end pt-5">
-                    <button type="button" class="btn btn-success px-4 me-md-2 select-book-btn mt-5">Book Appointment</button>
+                    <button type="submit" class="btn btn-success px-4 me-md-2 select-book-btn mt-5" id="bookBtn" disabled>Book Appointment</button>
                 </div>
             </form>
         </div>
 
-        <div id="form-thank">
-            <div class="d-flex flex-column justify-content-center align-items-center pt-5 pb-5">
-                <h3>Your appointment has been successfully booked</h3>
-                <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-primary px-4 me-md-2 select-slot-btn mt-3">View / Print Appointment</button>
-                </div>
-            </div>
-        </div>
+        
 
 
     </div>
@@ -152,7 +161,7 @@
       <div class="text-center mb-3"><h3>Members</h3></div>
       <ul margin="2px">
           <div class="list-group">
-            <div class="d-flex justify-content-between ">
+            <div class="d-flex justify-content-between">
               <p>{{patients[0].name}} (primary)</p>
               <button id="{{patients[0].id}}" class="btn btn-primary member" disabled>selected</button>
             </div>
