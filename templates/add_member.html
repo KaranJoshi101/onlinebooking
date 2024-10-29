@@ -24,14 +24,33 @@
         <option value="F">Female</option>
         <option value="O">Other</option>
       </select>
-      <div class="mb-3">
-        <label for="exampleInputName1" class="form-label">Address</label>
-        <input name="address" type="textarea" class="form-control" id="exampleInputName1" aria-describedby="NameHelp">
+      <div class="d-flex flex-column justify-content-center mb-3">
+        <h5>Select State</h5>
+        <select id="state" class="form-select" aria-label="Default select example" name=state required>
+            <option value="" selected>Select State</option>
+            {%for state in states%} 
+            <option value="{{state}}">{{state}}</option>
+            {%endfor%}
+          </select>
+    </div>
+    <div class="d-flex flex-column justify-content-center select-box mb-3">
+        <h5>Select City</h5>
+        <select class="form-select" id="city" aria-label="Default select example" disabled name="city">
+            <option selected>Select City</option>
+            {%for i in cities%}
+                {%for j in cities[i]%}
+                <option class="cities" id="{{i}}" value="{{j}}" style="display: none;">{{j}}</option>
+                {%endfor%}
+            {%endfor%}
+          </select>
+    </div>
+      <div class="text-center pb-3">
+        <button type="submit" class="btn btn-primary text-center">Submit</button>
+        <a type="button" href="/{{user.id}}/dashboard"  class="btn btn-danger text-center">Cancel</a>
       </div>
-      <div class="text-center pb-3"><button type="submit" class="btn btn-primary text-center">Submit</button></div>
       
     </form>
   </div>
-  
+  <script src="/static/cities.js"></script>
 </body>
     
