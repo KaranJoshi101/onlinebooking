@@ -41,7 +41,6 @@ class Deptdoc(db.Model):
 
 class Appointment(db.Model):
     id=db.Column(db.String(),primary_key=True)
-    ddid=db.Column(db.String(),db.ForeignKey('deptdoc.id'))
     date=db.Column(db.Date)
     slotid=db.Column(db.String(),db.ForeignKey('slots.id'))
     availablility=db.Column(db.Boolean,default=True)

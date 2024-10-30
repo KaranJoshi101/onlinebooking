@@ -250,7 +250,7 @@ def book(userId):
         date=datetime.date(date[0],date[1],date[2])
         pid=request.form.get('patient')
         slotid=request.form.get('slot')
-        appoint=Appointment.query.filter_by(ddid=ddid,date=date,slotid=slotid).first()
+        appoint=Appointment.query.filter_by(date=date,slotid=slotid).first()
         if(appoint):
             if(appoint.token==20):
                 return 'already full'
@@ -259,7 +259,7 @@ def book(userId):
             aid=appoint.id
             
         else:
-            newappoint=Appointment(id=idgen('AP'),ddid=ddid,date=date,slotid=slotid,token=1)
+            newappoint=Appointment(id=idgen('AP'),date=date,slotid=slotid,token=1)
             token=1
             db.session.add(newappoint)
             aid=newappoint.id
@@ -313,11 +313,30 @@ Team BookYourDoctor
 @app.route('/<docid>/doctor/dashboard')
 def doctorDashboard(docid): 
     deptdocs=[]
-    for d in Deptdoc.query.all():
-        if d.docid==docid:
-            dept=Department.query.get(d.deptid)
-            deptdocs.append((Hospital.query.get(dept.hid),dept,d))
-    return render_template('doctor_dash.html',doctor=Doctor.query.get(docid),deptdocs=deptdocs)
+    docdates=[]
+    for d in Deptdoc.query.filter_by(docid=docid).all():
+        daysrec=Days.query.filter_by(ddid=d.id).all()
+        schedule={}
+
+        for day in daysrec:
+            slots=Slots.query.filter_by(daysid=day.id).all()
+            schedule[days[day.day]]=[(i.from_.strftime('%I:%M %p'),i.to.strftime('%I:%M %p')) for i in slots]
+        dept=Department.query.get(d.deptid)
+        hosp=Hospital.query.get(dept.hid)
+        deptdocs.append((hosp,dept,schedule))
+        print(schedule)
+        today=datetime.date.today()
+        for i in range(0,31):
+            date=today+datetime.timedelta(days=i)
+            if days[date.weekday()+1] in schedule:
+                for slot in  Slots.query.filter_by(daysid=Days.query.filter_by(ddid=d.id,day=date.weekday()+1).first().id).all():
+                    appoint=Appointment.query.filter_by(date=date,slotid=slot.id).first()
+                    if(appoint):
+                        docdates.append((hosp,dept,date,slot.from_,slot.to,appoint.token))
+                    else:
+                        docdates.append((hosp,dept,date,slot.from_.strftime('%I:%M %p'),slot.to.strftime('%I:%M %p'),0))
+    print(docdates)
+    return render_template('doctor_dash.html',doctor=Doctor.query.get(docid),deptdocs=deptdocs,docdates=docdates)
 
 
 @app.errorhandler(404)

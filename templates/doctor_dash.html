@@ -39,7 +39,7 @@
             <button class="btn btn-primary text-center px-4 mt-5 mb-2">Edit Details</button>
         </div>
         <div class="container mt-5">
-          <h3>Your Network</h3>
+          <h3>Your TimeTable</h3>
             <table class="table table-hover table-bordered table-responsive">
                 <thead>
                   <tr>
@@ -50,67 +50,54 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {%for hosp,dept,deptdoc in deptdocs%}
+                  {%for hosp,dept,schedule in deptdocs%}
                   <tr>
                     <th scope="row">{{loop.index}}</th>
                     <td>{{hosp.name}}</td>
                     <td>{{dept.name}}</td>
-                    <td>{{deptdoc.days}}</td>
+                    <td>{%for s in schedule%}{{s}} ({%for sc in schedule[s]%}{{sc[0]}} - {{sc[1]}}{%endfor%}){%endfor%}</td>
                   </tr>
                  {%endfor%}
                 </tbody>
               </table>
         </div>
 
-            <div class="container pt-4">
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <button id="prevMonth">&lt;</button>
-                        <h2 id="monthYear"></h2>
-                        <button id="nextMonth">&gt;</button>
-                    </div>
-                    <div class="weekdays">
-                        <div>Sun</div>
-                        <div>Mon</div>
-                        <div>Tue</div>
-                        <div>Wed</div>
-                        <div>Thu</div>
-                        <div>Fri</div>
-                        <div>Sat</div>
-                    </div>
-                    <div id="calendar">
-                        <!-- Days will be dynamically generated here -->
-                    </div>
-                </div>
-            
-                <!-- Modal for colorizing date -->
-                <div id="modal" class="modal col-6">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h3>Cancel Visit</h3>
-                        <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="slot">
-                            <option value="" selected>Choose slot</option>
-                            {%for slot in slots%}
-                            <option value="{{slot}}">{{slot}}</option>
-                            {%endfor%}
-                          </select>
-                        <button id="markRed">Cancel</button>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="container pt-5 pb-5 d-flex flex-column">
-                <div class="container">
-                    <div class="alert alert-danger" role="alert">
-                    A simple danger alert—check it out! 
-                  </div>
-                  <div class="alert alert-danger" role="alert">
-                    A simple danger alert—check it out! 
-                  </div>
-                </div>
-            </div>    
+        <div id="dates" class="container mt-5">
+          <h3>Your Schedule</h3>
+          <table class="table table-hover table-bordered table-responsive">
+            <thead>
+              <tr>
+                <th scope="col">SL No.</th>
+                <th scope="col">Hospital</th>
+                <th scope="col">Department</th>
+                <th scope="col">Date</th>
+                <th scope="col">Time</th>
+                <th scope="col">Patients</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%for hosp,dept,date,from_,to,token in  docdates%}
+              <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td>{{hosp.name}}</td>
+                <td>{{dept.name}}</td>
+                <td>{{date}}</td>
+                <td>{{from_}} - {{to}}</td>
+                <td>{{token}}</td>
+                <td><a href="/{}/cancel" type="button" class="btn btn-danger">Cancel</a></td>
+              </tr>
+             {%endfor%}
+            </tbody>
+          </table>
         </div>
+            
+            
+                
+
+
+            
+        
         
 
 
