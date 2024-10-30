@@ -23,7 +23,7 @@ for i in range(len(CITIES)):
 
 #methods imported from flask module
 from flask import Flask,render_template, redirect, request,url_for, flash
-from werkzeug.utils import secure_filename
+
 from flask import current_app as app
 import uuid as uuid
 import os
@@ -118,7 +118,7 @@ def docCreate(hid,deptid):
                 else:
                     file.seek(0)
                     s.photo=file
-                    dp=secure_filename(s.photo.filename)
+                    dp=s.photo.filename
                     photo=str(uuid.uuid1())+"_"+dp
                     s.photo.save(os.path.join(app.config['UPLOAD_FOLDER'],photo))
                     s.photo=photo
