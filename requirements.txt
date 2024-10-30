@@ -33,7 +33,6 @@ tqdm==4.66.5
 twilio==9.3.3
 typing_extensions==4.12.2
 urllib3==1.26.20
-uuid==1.30
 websockets==10.4
 Werkzeug==3.0.3
 wkhtmltopdf==0.2
