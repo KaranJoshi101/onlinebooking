@@ -7,7 +7,7 @@ def create_app():
     app.debug=True
     
     app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///onlinebooking.sqlite3'
-    UPLOAD_FOLDER='C:\Documents\dbms_project\onlinebooking\static\images'
+    UPLOAD_FOLDER='https://drive.google.com/drive/folders/1G6PiaNCPTb4MB16HkEbkuDcM_bzJ2OsL'
     app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
     app.config['SECRET_KEY']="this is my secret key"
     db.init_app(app)
