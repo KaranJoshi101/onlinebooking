@@ -18,5 +18,4 @@ def create_app():
 app=create_app()
 from application.controllers import * #imports endpoints from controllers.py
 
-if __name__=='__main__':
-    app.run(debug=True) #runs the flask object with debug on so that every change reflects on server automatically
+ #runs the flask object with debug on so that every change reflects on server automatically
