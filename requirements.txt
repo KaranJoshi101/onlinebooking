@@ -22,6 +22,7 @@ Jinja2==3.1.4
 MarkupSafe==2.1.5
 multidict==6.1.0
 pdfkit==1.0.0
+psycopg2==2.9.10
 pyee==11.1.1
 PyJWT==2.9.0
 pyppeteer==2.0.0
