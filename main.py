@@ -7,7 +7,7 @@ def create_app():
     app.debug=True
     password='Joshi098!'
     app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres.yxdrmxtcbaqchvrhqfwv:a-g4SGTknzENbpu@aws-0-us-east-1.pooler.supabase.com:6543/postgres'
-    UPLOAD_FOLDER='https://supabase.com/dashboard/project/yxdrmxtcbaqchvrhqfwv/storage/buckets/images'
+    UPLOAD_FOLDER='https://yxdrmxtcbaqchvrhqfwv.supabase.co/storage/v1/s3'
     app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
     app.config['SECRET_KEY']="this is my secret key"
     db.init_app(app)
