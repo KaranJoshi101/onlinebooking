@@ -1,0 +1,29 @@
+.flex-wrapper {
+    background-color: #1e3770;
+    position: absolute;
+    margin: 0;
+    width: 100%;
+    bottom: 0;
+  }
+  .container{
+    text-align: center;
+  }
+  body{
+    background-image: url("/onlinebooking/static/images/stethoscope-with-blue-background.jpg");
+    background-size: cover;
+  }
+  .app{
+    color: black;
+  }
+  .list-group:hover{
+    color: #1e3770;
+  } 
+  .list-group-item-list-group-item-action{
+    transform: translateX(4px);
+  }
+  .btn.btn-primary{
+    border-radius: 50px;
+  }
+  .navbar.fixed-top.navbar-expand-sm.bg-body-secondary.px-3{
+    background-color: aqua;
+  }

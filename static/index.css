@@ -1,6 +1,10 @@
 .logo{
     transform: translateY(-4px);
-    font-family: sans-serif;
+    font-family: 'sans-serif';
+    text-decoration: none; 
+  }
+  #logotext{
+    
   }
   .nav-link{
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
