@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon/favicon.ico">
+<link rel="icon" type="image/gif" href="favicon/animated_favicon1.gif">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/admin_dash.css">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img class="logo" src="/static/images/logo.png"  width="45" height="50">BookMyDoctor
+            </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Search</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Summary</a>
+              </li>
+            </ul>
+              <a type="button" href="/" class="btn btn-outline-danger" >Log Out</a>
+          </div>
+        </div>
+    </nav>
+
+    <div class="container table-responsive mt-5" id="hospitals">
+        <h4>Hospitals</h4>
+      {%if hospitals|length%}
+      <table class="table  table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Department Count</th>
+            <th scope="col">City</th>
+            <th scope="col">State</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        {%for hospital in hospitals%}
+          <tr>
+            <th scope="row"><a href="/{{hospital.id}}/hospital/details">{{hospital.id}}</a></th>
+            <td>{{hospital.name}}</td>
+            <td ><button class="btn btn-primary catBtn" value="{{hospital.id}}">{{hospital.nDept}}</button></td>
+            <td>{{hospital.city}}</td>
+            <td>{{hospital.state}}</td>
+            <td>{{hospital.rating}}</td>
+            <td><a href="/{{hospital.id}}/hospital/modify">Modify</a> <a href="/{{hospital.id}}/hospital/remove" style="color:red">Remove</a></td>
+          </tr>
+        {%endfor%}
+        </tbody>
+      </table>
+      {%else%}
+      <h5>Oops! No hospitals added yet.</h5>
+      {%endif%}
+      <a href="/hospital/create" style="color:green">+New hospital</a>
+      </div>
+      
+      {%for hospital in hospitals%}
+      <div class="container table-responsive mt-5" id="{{hospital.id}}" style="display: none;">
+      <h3>{{hospital.name}}</h3>
+        <div class="d-flex justify-content-between">
+          <h4>Departments</h4>
+        <span class="text-end"><button class="btn btn-primary back"><- Go Back</button></span>
+        </div>
+        
+        {%if hospital.nDept%}
+      <table class="table  table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Doctors Count</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Hospital ID</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          {%for department in departments%}
+            {%if department.hid==hospital.id%}
+            <tr>
+              <th scope="row"><a href="/{{department.id}}/department/details">{{department.id}}</a></th>
+              <td>{{department.name}}</td>
+              <td ><button class="btn btn-primary docBtn" value="{{department.id}}">{{department.nDoc}}</button></td>
+              <td>{{department.rating}}</td>
+              <td>{{department.hid}}</td>
+              <td><a href="/{{department.id}}/department/modify">Modify</a> <a href="/{{department.id}}/department/remove" style="color:red">Remove</a></td>
+            </tr>
+            
+            {%endif%}
+            
+      
+        {%endfor%}
+        </tbody>
+      </table>
+      {%else%}
+      <h5>Oops! No departments added yet.</h5>
+      {%endif%}
+      <a href="/{{hospital.id}}/department/create">+Add a department</a>
+      </div>
+      {%endfor%}
+      <br><br>
+
+
+
+      {%for department in departments%}
+      <div class="container table-responsive mt-5" id="{{department.id}}" style="display: none;">
+        <h4>{{department.name}}</h4>
+        <div class="d-flex justify-content-between">
+          <h6>Doctors</h6>
+        <span class="text-end"><button class="btn btn-primary deptback"><- Go Back</button></span>
+        </div>
+        {%if department.nDoc%}
+      <table class="table  table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Email</th>
+            <th scope="col">Name</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Qualification</th>
+            <th scope="col">Experience</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        {%for deptdoc,doc in deptdocs%}
+        {%if deptdoc.deptid==department.id%}
+          <tr>
+            <th scope="row"><a href="/{{doc.id}}/doctor/details">{{doc.id}}</a></th>
+            <td>{{doc.email}}</td>
+            <td>{{doc.name}}</td>
+            <td>{{doc.gender}}</td>
+            <td>{{doc.qual}}</td>
+            <td>{{doc.exp}}</td>
+            <td><a href="/{{doc.id}}/modify">Modify</a> <a href="/{{doc.id}}/delete" style="color:red">Delete</a></td>
+          </tr>
+          {%endif%}
+        {%endfor%}
+        </tbody>
+      </table>  
+      {%else%}
+      <h5>Oops! No doctors added yet.</h5>
+      {%endif%}
+      <a href="/{{department.hid}}/{{department.id}}/doctor/create">+Add a doctor</a>
+      </div>
+      {%endfor%}
+         
+      <br><br> 
+
+
+      <div class="container table-responsive mt-5">
+        <h4>Patient Requests</h4>
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Assigned Doctor</th>
+            <th scope="col">Requested Date</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+        {%for request in requests%}
+          <tr>
+            <th scope="row"><a href="/{{request.id}}/request/details">{{request.id}}</a></th>
+            <th scope="row"><a href="/{{request.proId}}/doctor/details">{{request.proId}}</a></th>
+            <td>{{request.d_req}}</td>
+            <td>{{request.status}}</td>
+          </tr>
+        {%endfor%}
+        </tbody>
+      </table>
+      </div>
+      
+      <script src="/static/admin_dash.js"></script>
+
+</body>
+</html>

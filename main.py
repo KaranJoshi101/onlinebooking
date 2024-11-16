@@ -5,9 +5,9 @@ app=None
 def create_app():
     app=Flask(__name__) #__name__ gives file and we encapsulate with flask
     app.debug=True
-    
-    app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///onlinebooking.sqlite3'
-    UPLOAD_FOLDER='C:\Documents\dbms_project\onlinebooking\static\images'
+    password='Joshi098!'
+    app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres.yxdrmxtcbaqchvrhqfwv:a-g4SGTknzENbpu@aws-0-us-east-1.pooler.supabase.com:6543/postgres'
+    UPLOAD_FOLDER='./static/images'
     app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
     app.config['SECRET_KEY']="this is my secret key"
     db.init_app(app)
@@ -18,5 +18,4 @@ def create_app():
 app=create_app()
 from application.controllers import * #imports endpoints from controllers.py
 
-if __name__=='__main__':
-    app.run(debug=True) #runs the flask object with debug on so that every change reflects on server automatically
+ #runs the flask object with debug on so that every change reflects on server automatically
