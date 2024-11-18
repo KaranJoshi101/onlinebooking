@@ -92,33 +92,26 @@ bookdate.addEventListener('click',()=>{
 
         slot.removeAttribute('disabled')
         let day=new Date(bookdate.value)
-        
         day=day.getDay();
-    
-        console.log(day)
         slots=document.querySelectorAll(`.${doctor.value}`)
-        
-            
-            for(s of slots){
-                if(s.id==day)
-                s.style.display='block'
-            }
-        
-        
+        for(s of slots){
+            if(s.classList.contains(day))
+                s.style.display='block';
+        }
     }
 })
 
 slot.addEventListener('click',()=>{
     if(slot.value){
         document.querySelector('#bookBtn').removeAttribute('disabled')
-    }
-})
-
-patient=document.querySelector('#patient')
+        patient=document.querySelector('#patient')
 members=document.querySelectorAll('.member')
 for(member of members){
-    if('disabled' in member){
+    if(member.innerText=='selected'){
         patient.value=member.id
         break;
     }
 }
+    }
+})
+

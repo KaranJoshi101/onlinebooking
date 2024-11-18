@@ -57,7 +57,7 @@
                     <th scope="row">{{loop.index}}</th>
                     <td>{{hosp.name}}</td>
                     <td>{{dept.name}}</td>
-                    <td>{%for s in schedule%}{{s}} ({%for sc in schedule[s]%}{{sc[0]}} - {{sc[1]}}{%endfor%}){%endfor%}</td>
+                    <td>{%for s in schedule%}{{s}} { {%for sc in schedule[s]%}({{sc[0]}}-{{sc[1]}}) {%endfor%} } || {%endfor%}</td>
                   </tr>
                  {%endfor%}
                 </tbody>

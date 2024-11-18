@@ -48,12 +48,19 @@
       
     </div>
   </nav>
-      <div class="container-sm col-lg-4 col-md-8 col-sm-12 shadow-lg p-3  bg-white rounded" id="appointment" style="margin-top:120px ;padding: 20px 20px 20px 20px; border-radius: 2%;">
+      <div class="container-sm col-lg-6 col-md-10 col-sm-14 shadow-lg p-3  bg-white rounded" id="appointment" style="margin-top:120px ;padding: 20px 20px 20px 20px; border-radius: 2%;">
         <ul margin="2px">
-            <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action"> appointment number 1</a>
-                <a href="#" class="list-group-item list-group-item-action"> appointment number 2</a>
-              </div>
+          {%for patient,patientlist,appointment in patientsappointment%}
+            <ul class="list-group patient-appointment" id="{{patient.id}}" style="display: none;">
+              {%if patientlist|length%}
+              {%for plist in patientlist%}
+                <li class="list-group-item d-flex justify-content-between">Date: {{appointment[loop.index-1].date}}, Token No: {{plist.token}}, Status: {{plist.status}}  <a type="button" class="btn btn-info" href="/{{patient.id}}/{{appointment[loop.index-1].id}}/{{plist.id}}">View Details</a></li>
+              {%endfor%}
+              {%else%}
+              <li class="list-group-item" >No appointment yet!!</li>
+              {%endif%}
+              </ul>
+              {%endfor%}
         </ul>
         <a type="button" class="btn btn-success" id="bookAppointmentBtn">
             +Book Appointment
@@ -137,14 +144,17 @@
                   <h5>Select Slot</h5>
                   <select class="form-select" id="slot" aria-label="Default select example" name="slot" disabled>
                       <option value="" selected>Select Slot</option>
-                      {%for days,slot in slots%}
-                          <option id="{{days.day}}" class="{{days.ddid}}" value="{{slot.id}}" style="display: none;">{{slot.from_.strftime("%I:%M%p")}} - {{slot.to.strftime("%I:%M%p")}}</option>
-                      {%endfor%}
+                      {%for days in slots%}
+                          {%for slot in slots[days]%}
+                          <option class="{{days.ddid}} {{days.day}}" value="{{slot.id}}" style="display: none;" >{{slot.from_.strftime("%I:%M%p")}} - {{slot.to.strftime("%I:%M%p")}}</option>
+                      
+                          {%endfor%}
+                          {%endfor%}
                     </select>
               </div>
                 
                   {%for doc,deptdoc,days in docdays%}
-                <p id='{{deptdoc.id}}' class="docDay text-center " style="display: none; font-weight: bold;font-stretch:expanded;color: green;">Dr. {{doc.name}} is available on {{days|join(",")}} </p>
+                <p id='{{deptdoc.id}}' class="docDay text-center " style="display: none; font-weight: bold;font-stretch:expanded;color: green;">Dr. {{doc.name}} is available on {{days|join(" and ")}} </p>
                   {%endfor%}
 
                 <input id="patient" name="patient" type="text" style="display: none;">  

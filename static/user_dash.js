@@ -1,7 +1,7 @@
 let appointmentBtn=document.querySelector('#appointmentBtn');
 let profileBtn=document.querySelector('#profileBtn');
 let bookAppointmentBtn=document.querySelector('#bookAppointmentBtn');
-
+let patientsappointment=document.querySelectorAll('.patient-appointment')
 
 let appointment=document.querySelector('#appointment');
 let bookAppointment=document.querySelector('#bookAppointment');
@@ -34,5 +34,23 @@ for(let m of member){
         
         prev.removeAttribute('disabled')
         l.push(m)
+        app()
+        
     })
 }
+
+function app(){
+    for (let patient of patientsappointment){
+        if(patient.id==l[0].id){
+            patient.style.display='block';
+        }
+        else{
+            patient.style.display='none';
+        }
+    }
+}
+
+app()
+
+
+

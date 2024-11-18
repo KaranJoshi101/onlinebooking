@@ -1,0 +1,119 @@
+{%extends 'adminbase.html'%}
+{%block content%}
+<div class="container pt-3 d-flex justify-content-end">
+    <h5 class="pt-1  pr-3">Search by : </h5>
+    
+        <select id="select" class="px-2" >
+            <option  value="Hospital" selected>Hospital</option>
+            <option  value="Department">Department</option>
+            <option  value="Doctor">Doctor</option>
+            <option value="Patient">Patient</option>
+            <option  value="Appointment">Appointment</option>
+          </select>
+          <input class="mx-4 px-1"  type="search" placeholder="" aria-label="Search" id="search">
+    
+    
+</div>
+<div class="container table-responsive"  id="Hospital" style="display: none;">
+  <h4>Hospital</h4>
+  {%if hospitals|length%}
+  <table class="table table-bordered table-hover table-responsive">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Department Count</th>
+            <th scope="col">City</th>
+            <th scope="col">State</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        {%for hospital in hospitals%}
+          <tr class="Hospital" id="{{hospital.id}}{{hospital.name}}{{hospital.city}}{{hospital.state}}">
+            <th scope="row"><a href="/{{hospital.id}}/hospital/details">{{hospital.id}}</a></th>
+            <td>{{hospital.name}}</td>
+            <td ><button class="btn btn-primary catBtn" value="{{hospital.id}}">{{hospital.nDept}}</button></td>
+            <td>{{hospital.city}}</td>
+            <td>{{hospital.state}}</td>
+            <td>{{hospital.rating}}</td>
+            <td><a href="/{{hospital.id}}/hospital/modify">Modify</a> <a href="/{{hospital.id}}/hospital/remove" style="color:red">Remove</a></td>
+          </tr>
+        {%endfor%}
+        </tbody>
+      </table>
+      {%else%}
+      <h5>Oops! No hospitals added yet.</h5>
+      {%endif%}
+</div>
+
+<div class="container table-responsive mt-5" id="Department" style="display: none;">
+      <div class="d-flex justify-content-between">
+        <h4>Departments</h4>
+      </div>
+    <table class="table  table-bordered table-hover">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Doctors Count</th>
+          <th scope="col">Rating</th>
+          <th scope="col">Hospital ID</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        {%for department in departments%}
+          <tr class="Department" id="{{department.id}}{{department.name}}">
+            <th scope="row"><a href="/{{department.id}}/department/details">{{department.id}}</a></th>
+            <td>{{department.name}}</td>
+            <td ><button class="btn btn-primary docBtn" value="{{department.id}}">{{department.nDoc}}</button></td>
+            <td>{{department.rating}}</td>
+            <td>{{department.hid}}</td>
+            <td><a href="/{{department.id}}/department/modify">Modify</a> <a href="/{{department.id}}/department/remove" style="color:red">Remove</a></td>
+          </tr>
+          
+          
+    
+      {%endfor%}
+      </tbody>
+    </table>
+    </div>
+
+    <div class="container table-responsive mt-5" id="Doctor" style="display: none;">
+        <div class="d-flex justify-content-between">
+          <h6>Doctors</h6>
+        </div>
+      <table class="table  table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Email</th>
+            <th scope="col">Name</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Qualification</th>
+            <th scope="col">Experience</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        {%for doc in doctors%}
+          <tr class="Doctor" id="{{doc.id}}{{doc.email}}{{doc.name}}">
+            <th scope="row"><a href="/{{doc.id}}/doctor/details">{{doc.id}}</a></th>
+            <td>{{doc.email}}</td>
+            <td>{{doc.name}}</td>
+            <td>{{doc.gender}}</td>
+            <td>{{doc.qual}}</td>
+            <td>{{doc.exp}}</td>
+            <td><a href="/{{doc.id}}/doctor/modify">Modify</a> <a href="/{{doc.id}}/doctor/delete" style="color:red">Delete</a></td>
+          </tr>
+     
+        {%endfor%}
+        </tbody>
+      </table>  
+      </div>
+
+<script src="/static/admin_search.js"></script>
+{%endblock%}

@@ -3,7 +3,30 @@
     line-height: 2.15;
     padding-left: .75em;
     padding-right: .75em;
-    }
-    .card-registration .select-arrow {
-    top: 13px;
-    }
+}
+.card-registration .select-arrow {
+top: 13px;
+}
+
+.text-center{
+ padding-top: 20px;
+ font-weight: bold;
+}
+
+label{
+    font-weight: bold;
+}
+
+.btn{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+select{
+    border-radius: 5px;
+}
+
+select:hover{
+    background-color: #ECECEC;
+}
+
