@@ -1,6 +1,14 @@
 {%extends 'detailsbase.html'%}
 {%block content%}
+<div style="display: flex; align-items: center;">
    <div>
-    
+   <h4 class="pt-3" >Name : Dr. {{doctor.name}}</h4>
+   <h6>Email ID : {{doctor.email}}</h6>
+   <h6>Gender : {{doctor.gender}}</h6>
+   <h6>Experience(in years) : {{doctor.exp}}</h6>
+   <h6>Qualification : {{doctor.qual}}</h6>
+   <h6>ID:{{doctor.id}}</h6>
+   </div>
+   <img style="margin-left: 300px;" src="/static/images/{{doctor.photo}}" height="250" >
    </div>
 {%endblock%}
