@@ -6,6 +6,7 @@ class Hospital(db.Model):
     city=db.Column(db.String())
     nDept=db.Column(db.Integer,default=0)
     rating=db.Column(db.Float,default=0)
+    departments=db.relationship('Department',backref='hospital')
 
 class Department(db.Model):
     id=db.Column(db.String(),primary_key=True)
@@ -13,6 +14,7 @@ class Department(db.Model):
     nDoc=db.Column(db.Integer,default=0)
     rating=db.Column(db.Float)
     hid=db.Column(db.String(),db.ForeignKey('hospital.id'))
+    deptdocs=db.relationship('Deptdoc',backref='department')
 
 class Doctor(db.Model):
     id=db.Column(db.String(),primary_key=True)
@@ -23,6 +25,7 @@ class Doctor(db.Model):
     qual=db.Column(db.String())
     exp=db.Column(db.Integer)
     photo=db.Column(db.String())
+    deptdocs=db.relationship('Deptdoc',backref='doctor')
 
 class Patient(db.Model):
     id=db.Column(db.String(),primary_key=True)
@@ -33,23 +36,27 @@ class Patient(db.Model):
     record=db.Column(db.Text)
     d_added=db.Column(db.DateTime)
     uid=db.Column(db.String(),db.ForeignKey('user.id'))
+    patientlists=db.relationship('Patientlist',backref='patient')
 
 class Deptdoc(db.Model):
     id=db.Column(db.String(),primary_key=True)
     deptid=db.Column(db.String(),db.ForeignKey('department.id'))
     docid=db.Column(db.String(),db.ForeignKey('doctor.id'))
+    days=db.relationship('Days',backref='deptdoc')
 
 class Appointment(db.Model):
     id=db.Column(db.String(),primary_key=True)
     date=db.Column(db.Date)
     slotid=db.Column(db.String(),db.ForeignKey('slots.id'))
-    availablility=db.Column(db.Boolean,default=True)
-    token=db.Column(db.Integer,default=0)
+    availability=db.Column(db.Boolean,default=True)
+    tokenCount=db.Column(db.Integer,default=0)
+    patientlists=db.relationship('Patientlist',backref='appointment')
 
 class Patientlist(db.Model):
     id=db.Column(db.String(),primary_key=True)
     aid=db.Column(db.String(),db.ForeignKey('appointment.id'))
     pid=db.Column(db.String(),db.ForeignKey('patient.id'))
+    token=db.Column(db.Integer)
     status=db.Column(db.String(),default='booked')
 
 class User(db.Model):
@@ -61,15 +68,18 @@ class User(db.Model):
     d_created=db.Column(db.DateTime)
     otp=db.Column(db.String())
     verified=db.Column(db.Boolean)
+    patients=db.relationship('Patient',backref='user')
 
 class Days(db.Model):
     id=db.Column(db.String(),primary_key=True)
     ddid=db.Column(db.String(),db.ForeignKey('deptdoc.id'))
     day=db.Column(db.Integer)
+    slots=db.relationship('Slots',backref='days')
 
 class Slots(db.Model):
     id=db.Column(db.String(),primary_key=True)
     daysid=db.Column(db.String(),db.ForeignKey('days.id'))
     from_=db.Column(db.Time)
     to=db.Column(db.Time)
+    appointments=db.relationship('Appointment',backref='slots')
 

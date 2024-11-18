@@ -1,0 +1,49 @@
+{%extends 'adminbase.html'%}
+{%block content%}
+<div class="d-flex justify-content-around">
+   <div></div>
+   <h2 class="text-center mt-3 mb-3">Appointment Details</h2>
+   
+<div>
+   <a type="button" class="btn btn-primary" href="/admin/dashboard" ><- Go Back </a>
+ </div>
+</div>
+
+<div class="container">
+   <div><h6>Token Count :{{Appointment.tokenCount}}</h6></div>
+   <h6>Patient Details</h6>
+   <div class="container table-responsive">
+      <table class="table table-hover table-bordered table-responsive">
+         <thead>
+           <tr>
+             <th scope="col">Token No.</th>
+             <th scope="col">ID</th>
+             <th scope="col">Name</th>
+             <th scope="col">Gender</th>
+             <th scope="col">State</th>
+             <th scope="col">City</th>
+             <th scope="col">Status</th>
+           </tr>
+         </thead>
+         <tbody>
+           {%for list,patient in patientlist%}
+           <tr>
+             <th scope="row">{{list.token}}</th>
+             <td><a href="/{{list.pid}}/patient/details">{{list.pid}}</a></td>
+             <td>{{patient.name}}</td>
+             <td>{{patient.gender}}</td>
+             <td>{{patient.state}}</td>
+             <td>{{patient.city}}</td>
+             <td>{{list.status}}</td>
+           </tr>
+          {%endfor%}
+         </tbody>
+       </table>
+   </div>
+</div>
+
+        
+
+         
+
+{%endblock%}
