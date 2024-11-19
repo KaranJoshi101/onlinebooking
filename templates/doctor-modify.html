@@ -1,0 +1,117 @@
+{%extends 'base.html'%}
+{%block content%}
+<div class="container col-6 shadow p-3 mb-5 bg-body rounded top-cont  pb-5 mt-5">
+  <div class="text-center d-flex justify-content-between mb-5" >
+    <div></div>
+    <h2 style="font-family: sans-serif; font-weight: bold;">Modify Doctor Details</h2>
+  
+<div class="text-end"><a href="/admin/dashboard" type="button" class="btn btn-dark btn-sm px-3" id="form-slot-back"><- Exit</a></div>
+</div>
+{%for message in get_flashed_messages()%}
+        <div class="text-center"><p style="color:red;font-size: large;">{{message}}</p></div>
+{%endfor%}
+
+        <div class="select-detail-hospital pt-5 px-5">
+          <form action="/{{doctor.id}}/doctor/modify" enctype="multipart/form-data" method="post">
+              <div class="mb-3">
+                  <h5>Doctor Name</h5>
+                  <input name="name" type="text" class="form-control"  aria-describedby="NameHelp" placeholder="{{doctor.name}}">
+                </div>
+                <div class="mb-3">
+                  <h5>Email</h5>
+                  <input name="email" type="email" class="form-control"  aria-describedby="NameHelp" placeholder="{{doctor.email}}">
+                </div>
+                <div class="mb-3">
+                  <h5>Password</h5>
+                  <input name="pass" type="password" class="form-control"  aria-describedby="NameHelp" placeholder="{{doctor.password}}">
+                </div>
+                {%if not department%}
+                <div class="mb-3">
+                  <h5>Add to New Department</h5>
+                  <input name="deptid" type="text" class="form-control"  aria-describedby="NameHelp" placeholder="Enter Department Id">
+                </div>
+
+                
+                <div class="mb-3">
+                  <h5>Available Day & Slot</h5>
+                  <select class="form-select" aria-label="Default select example" name='day'>
+                      <option value="" selected>Select Day</option>
+                      {%for day in days%}
+                      <option value="{{day}}">{{days[day]}}</option>
+                      {%endfor%}
+  
+                  </select>
+                  
+                </div>
+                <div class="mb-3 d-flex justify-content-between">
+                  <div>
+                    <label for="start">From : </label>
+                  <input id="start" type="time" name="from">
+                  </div>
+                  <div>
+                    <label for="end">To : </label>
+                  <input id="end" type="time" name="to">
+                  </div>
+                  <div></div>
+                  
+                </div>
+                {%else%}
+                <input name="deptid" type="text" class="form-control" value="{{department.id}}"  aria-describedby="NameHelp" placeholder="Enter Department Id" style="display: none;">
+                <input type="text" name="modify" value="true" style="display: none;">
+                <div class="mb-3">
+                  <h5>Add Day & Slot</h5>
+                  <select class="form-select" aria-label="Default select example" name='day' >
+                      <option value="" selected>Select Day</option>
+                      {%for day in days%}
+                      <option value="{{day}}">{{days[day]}}</option>
+                      {%endfor%}
+  
+                  </select>
+                  
+                </div>
+                <div class="mb-3 d-flex justify-content-between">
+                  <div>
+                    <label for="start">From : </label>
+                  <input id="start" type="time" name="from">
+                  </div>
+                  <div>
+                    <label for="end">To : </label>
+                  <input id="end" type="time" name="to">
+                  </div>
+                  <div></div>
+                  
+                </div>
+                {%endif%}
+                <div class="mb-3">
+                  <h5>Gender</h5>
+                  <select class="form-select" aria-label="Default select example" name='gender' >
+                      <option value="" selected>Select Gender</option>
+                      <option value="M">MALE</option>
+                      <option value="F" >FEMALE</option>
+                      <option value="O">OTHERS</option>
+  
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <h5>Qualification Details</h5>
+                  <input name="qual" type="textarea" class="form-control"  aria-describedby="NameHelp">
+                </div>
+                <div class="mb-3">
+                  <h5>Experience(in years)</h5>
+                  <input name="exp" type="number" class="form-control"  aria-describedby="NameHelp">
+                </div>
+                <div class="mb-3">
+                  <h5>Profile Picture</h5>
+               
+                      <input class="form-control" type="file" id="formFile" name="photo">
+                </div>
+                
+                
+  
+                
+                <div class="text-center mt-4"><button type="submit" class="btn btn-success px-5">Add</button></div>
+              </form>
+      </div>
+
+</div>
+{%endblock%}

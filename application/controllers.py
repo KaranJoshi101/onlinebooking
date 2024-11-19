@@ -13,10 +13,10 @@ def idgen(i):
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif','webp'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
+#code starting from here
 days={1:'Monday',2:'Tuesday',3:'Wednesday',4:'Thursday',5:'Friday',6:'Saturday',7:'Sunday'}
-states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chandigarh', 'Chhattisgarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Jammu and Kashmir', 'Karnataka', 'Kerala', 'Ladakh', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Puducherry', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand']
-CITIES=[['Port Blair'],['Adoni', 'Amaravati', 'Anantapur', 'Chandragiri', 'Chittoor', 'Dowlaiswaram', 'Eluru', 'Guntur', 'Kadapa', 'Kakinada', 'Kurnool', 'Machilipatnam', 'Nagarjunakoṇḍa', 'Rajahmundry', 'Srikakulam', 'Tirupati', 'Vijayawada', 'Visakhapatnam', 'Vizianagaram', 'Yemmiganur'],['Itanagar'],['Guwahati', 'Silchar', 'Dibrugarh', 'Jorhat', 'Nagaon'],['Ara', 'Barauni', 'Begusarai', 'Bettiah', 'Bhagalpur', 'Bihar Sharif', 'Bodh Gaya', 'Buxar', 'Chapra', 'Darbhanga', 'Dehri', 'Dinapur Nizamat', 'Gaya', 'Hajipur', 'Jamalpur', 'Katihar', 'Madhubani', 'Motihari', 'Munger', 'Muzaffarpur', 'Patna', 'Purnia', 'Pusa', 'Saharsa', 'Samastipur', 'Sasaram', 'Sitamarhi', 'Siwan'],['Chandigarh'],['Ambikapur', 'Bhilai', 'Bilaspur', 'Dhamtari', 'Durg', 'Jagdalpur', 'Raipur', 'Rajnandgaon'],['Ambikapur', 'Bhilai', 'Bilaspur', 'Dhamtari', 'Durg', 'Jagdalpur', 'Raipur', 'Rajnandgaon'],['New Delhi'],['Madgaon', 'Panaji'],['Ahmadabad', 'Amreli', 'Bharuch', 'Bhavnagar', 'Bhuj', 'Dwarka', 'Gandhinagar', 'Godhra', 'Jamnagar', 'Junagadh', 'Kandla', 'Khambhat', 'Kheda', 'Mahesana', 'Morbi', 'Nadiad', 'Navsari', 'Okha', 'Palanpur', 'Patan', 'Porbandar', 'Rajkot', 'Surat', 'Surendranagar', 'Valsad', 'Veraval'],['Ambala', 'Bhiwani', 'Chandigarh', 'Faridabad', 'Firozpur Jhirka', 'Gurugram', 'Hansi', 'Hisar', 'Jind', 'Kaithal', 'Karnal', 'Kurukshetra', 'Panipat', 'Pehowa', 'Rewari', 'Rohtak', 'Sirsa', 'Sonipat'],['Bilaspur', 'Chamba', 'Dalhousie', 'Dharmshala', 'Hamirpur', 'Kangra', 'Kullu', 'Mandi', 'Nahan', 'Shimla', 'Una'],]
+states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chandigarh', 'Chhattisgarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Jammu and Kashmir', 'Karnataka', 'Kerala', 'Ladakh', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Puducherry', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand','West Bengal']
+CITIES=[['Port Blair'],['Adoni', 'Amaravati', 'Anantapur', 'Chandragiri', 'Chittoor', 'Dowlaiswaram', 'Eluru', 'Guntur', 'Kadapa', 'Kakinada', 'Kurnool', 'Machilipatnam', 'Nagarjunakoṇḍa', 'Rajahmundry', 'Srikakulam', 'Tirupati', 'Vijayawada', 'Visakhapatnam', 'Vizianagaram', 'Yemmiganur'],['Itanagar'],['Guwahati', 'Silchar', 'Dibrugarh', 'Jorhat', 'Nagaon'],['Ara', 'Barauni', 'Begusarai', 'Bettiah', 'Bhagalpur', 'Bihar Sharif', 'Bodh Gaya', 'Buxar', 'Chapra', 'Darbhanga', 'Dehri', 'Dinapur Nizamat', 'Gaya', 'Hajipur', 'Jamalpur', 'Katihar', 'Madhubani', 'Motihari', 'Munger', 'Muzaffarpur', 'Patna', 'Purnia', 'Pusa', 'Saharsa', 'Samastipur', 'Sasaram', 'Sitamarhi', 'Siwan'],['Chandigarh'],['Ambikapur', 'Bhilai', 'Bilaspur', 'Dhamtari', 'Durg', 'Jagdalpur', 'Raipur', 'Rajnandgaon'],['Daman','Diu','Silvassa'],['New Delhi'],['Madgaon', 'Panaji'],['Ahmadabad', 'Amreli', 'Bharuch', 'Bhavnagar', 'Bhuj', 'Dwarka', 'Gandhinagar', 'Godhra', 'Jamnagar', 'Junagadh', 'Kandla', 'Khambhat', 'Kheda', 'Mahesana', 'Morbi', 'Nadiad', 'Navsari', 'Okha', 'Palanpur', 'Patan', 'Porbandar', 'Rajkot', 'Surat', 'Surendranagar', 'Valsad', 'Veraval'],['Ambala', 'Bhiwani', 'Chandigarh', 'Faridabad', 'Firozpur Jhirka', 'Gurugram', 'Hansi', 'Hisar', 'Jind', 'Kaithal', 'Karnal', 'Kurukshetra', 'Panipat', 'Pehowa', 'Rewari', 'Rohtak', 'Sirsa', 'Sonipat'],['Bilaspur', 'Chamba', 'Dalhousie', 'Dharmshala', 'Hamirpur', 'Kangra', 'Kullu', 'Mandi', 'Nahan', 'Shimla', 'Una'],['Anantnag', 'Baramula', 'Doda', 'Gulmarg', 'Jammu', 'Kathua', 'Punch', 'Rajouri', 'Srinagar', 'Udhampur'],['Bokaro', 'Chaibasa', 'Deoghar', 'Dhanbad', 'Dumka', 'Giridih', 'Hazaribag', 'Jamshedpur', 'Jharia', 'Rajmahal', 'Ranchi', 'Saraikela'],['Badami', 'Ballari', 'Bengaluru', 'Belagavi', 'Bhadravati', 'Bidar', 'Chikkamagaluru', 'Chitradurga', 'Davangere', 'Halebid', 'Hassan', 'Hubballi-Dharwad', 'Kalaburagi', 'Kolar', 'Madikeri', 'Mandya', 'Mangaluru', 'Mysuru', 'Raichur', 'Shivamogga', 'Shravanabelagola', 'Shrirangapattana', 'Tumakuru', 'Vijayapura'],['Alappuzha', 'Vatakara', 'Idukki', 'Kannur', 'Kochi', 'Kollam', 'Kottayam', 'Kozhikode', 'Mattancheri', 'Palakkad', 'Thalassery', 'Thiruvananthapuram', 'Thrissur'],['Kargil', 'Leh'],['Balaghat', 'Barwani', 'Betul', 'Bharhut', 'Bhind', 'Bhojpur', 'Bhopal', 'Burhanpur', 'Chhatarpur', 'Chhindwara', 'Damoh', 'Datia', 'Dewas', 'Dhar', 'Dr. Ambedkar Nagar (Mhow)', 'Guna', 'Gwalior', 'Hoshangabad', 'Indore', 'Itarsi', 'Jabalpur', 'Jhabua', 'Khajuraho', 'Khandwa', 'Khargone', 'Maheshwar', 'Mandla', 'Mandsaur', 'Morena', 'Murwara', 'Narsimhapur', 'Narsinghgarh', 'Narwar', 'Neemuch', 'Nowgong', 'Orchha', 'Panna', 'Raisen', 'Rajgarh', 'Ratlam', 'Rewa', 'Sagar', 'Sarangpur', 'Satna', 'Sehore', 'Seoni', 'Shahdol', 'Shajapur', 'Sheopur', 'Shivpuri', 'Ujjain', 'Vidisha'],['Ahmadnagar', 'Akola', 'Amravati', 'Aurangabad', 'Bhandara', 'Bhusawal', 'Bid', 'Buldhana', 'Chandrapur', 'Daulatabad', 'Dhule', 'Jalgaon', 'Kalyan', 'Karli', 'Kolhapur', 'Mahabaleshwar', 'Malegaon', 'Matheran', 'Mumbai', 'Nagpur', 'Nanded', 'Nashik', 'Osmanabad', 'Pandharpur', 'Parbhani', 'Pune', 'Ratnagiri', 'Sangli', 'Satara', 'Sevagram', 'Solapur', 'Thane', 'Ulhasnagar', 'Vasai-Virar', 'Wardha', 'Yavatmal'],['Imphal'],['Cherrapunji','Shillong'],['Aizawl','Lunglei'],['Kohima', 'Mon', 'Phek', 'Wokha', 'Zunheboto'],['Balangir', 'Baleshwar', 'Baripada', 'Bhubaneshwar', 'Brahmapur', 'Cuttack', 'Dhenkanal', 'Kendujhar', 'Konark', 'Koraput', 'Paradip', 'Phulabani', 'Puri', 'Sambalpur', 'Udayagiri'],['Karaikal', 'Mahe', 'Puducherry', 'Yanam'],['Amritsar', 'Batala', 'Chandigarh', 'Faridkot', 'Firozpur', 'Gurdaspur', 'Hoshiarpur', 'Jalandhar', 'Kapurthala', 'Ludhiana', 'Nabha', 'Patiala', 'Rupnagar', 'Sangrur'],['Abu', 'Ajmer', 'Alwar', 'Amer', 'Barmer', 'Beawar', 'Bharatpur', 'Bhilwara', 'Bikaner', 'Bundi', 'Chittaurgarh', 'Churu', 'Dhaulpur', 'Dungarpur', 'Ganganagar', 'Hanumangarh', 'Jaipur', 'Jaisalmer', 'Jalor', 'Jhalawar', 'Jhunjhunu', 'Jodhpur', 'Kishangarh', 'Kota', 'Merta', 'Nagaur', 'Nathdwara', 'Pali', 'Phalodi', 'Pushkar', 'Sawai Madhopur', 'Shahpura', 'Sikar', 'Sirohi', 'Tonk', 'Udaipur'],['Gangtok', 'Gyalshing', 'Lachung', 'Mangan'],['Arcot', 'Chengalpattu', 'Chennai', 'Chidambaram', 'Coimbatore', 'Cuddalore', 'Dharmapuri', 'Dindigul', 'Erode', 'Kanchipuram', 'Kanniyakumari', 'Kodaikanal', 'Kumbakonam', 'Madurai', 'Mamallapuram', 'Nagappattinam', 'Nagercoil', 'Palayamkottai', 'Pudukkottai', 'Rajapalayam', 'Ramanathapuram', 'Salem', 'Thanjavur', 'Tiruchchirappalli', 'Tirunelveli', 'Tiruppur', 'Thoothukudi', 'Udhagamandalam', 'Vellore'],['Hyderabad', 'Karimnagar', 'Khammam', 'Mahbubnagar', 'Nizamabad', 'Sangareddi', 'Warangal'],['Agartala'],['Agra', 'Aligarh', 'Amroha', 'Ayodhya', 'Azamgarh', 'Bahraich', 'Ballia', 'Banda', 'Bara Banki', 'Bareilly', 'Basti', 'Bijnor', 'Bithur', 'Budaun', 'Bulandshahr', 'Deoria', 'Etah', 'Etawah', 'Faizabad', 'Farrukhabad-cum-Fatehgarh', 'Fatehpur', 'Fatehpur Sikri', 'Ghaziabad', 'Ghazipur', 'Gonda', 'Gorakhpur', 'Hamirpur', 'Hardoi', 'Hathras', 'Jalaun', 'Jaunpur', 'Jhansi', 'Kannauj', 'Kanpur', 'Lakhimpur', 'Lalitpur', 'Lucknow', 'Mainpuri', 'Mathura', 'Meerut', 'Mirzapur-Vindhyachal', 'Moradabad', 'Muzaffarnagar', 'Partapgarh', 'Pilibhit', 'Prayagraj', 'Rae Bareli', 'Rampur', 'Saharanpur', 'Sambhal', 'Shahjahanpur', 'Sitapur', 'Sultanpur', 'Tehri', 'Varanasi'],['Almora', 'Dehra Dun', 'Haridwar', 'Mussoorie', 'Nainital', 'Pithoragarh'],['Alipore', 'Alipur Duar', 'Asansol', 'Baharampur', 'Bally', 'Balurghat', 'Bankura', 'Baranagar', 'Barasat', 'Barrackpore', 'Basirhat', 'Bhatpara', 'Bishnupur', 'Budge Budge', 'Burdwan', 'Chandernagore', 'Darjeeling', 'Diamond Harbour', 'Dum Dum', 'Durgapur', 'Halisahar', 'Haora', 'Hugli', 'Ingraj Bazar', 'Jalpaiguri', 'Kalimpong', 'Kamarhati', 'Kanchrapara', 'Kharagpur', 'Cooch Behar', 'Kolkata', 'Krishnanagar', 'Malda', 'Midnapore', 'Murshidabad', 'Nabadwip', 'Palashi', 'Panihati', 'Purulia', 'Raiganj', 'Santipur', 'Shantiniketan', 'Shrirampur', 'Siliguri', 'Siuri', 'Tamluk', 'Titagarh']]
 cities={}
 for i in range(len(CITIES)):
     cities[states[i]]=CITIES[i]
@@ -66,7 +66,159 @@ def adminDashboard():
     deptdocs=[]
     for i in Deptdoc.query.all():
         deptdocs.append((i,Doctor.query.get(i.docid)))
-    return render_template('admin_dash.html',hospitals=Hospital.query.all(),deptdocs=deptdocs,departments=Department.query.all())
+    today=datetime.date.today()
+    monthly_booking={}
+    for i in range(0,31):
+        date=today+datetime.timedelta(days=i)
+        appointments=Appointment.query.filter_by(date=date).all()
+        daily_booking=[]
+        for a in appointments:
+            s=Slots.query.get(a.slotid)
+            d=Days.query.get(s.daysid)
+            dd=Deptdoc.query.get(d.ddid)
+            daily_booking.append((a,dd,s))
+        monthly_booking[date]=daily_booking
+
+
+
+
+    return render_template('admin_dash.html',hospitals=Hospital.query.all(),deptdocs=deptdocs,departments=Department.query.all(),monthly_booking=monthly_booking)
+
+@app.route('/admin/search')
+def adminSearch():
+    hospitals=Hospital.query.all()
+    departments=Department.query.all()
+    doctors=Doctor.query.all()
+    return render_template('admin_search.html',hospitals=hospitals,departments=departments,doctors=doctors)
+
+@app.route('/<docId>/doctor/delete')
+def doctorDelete(docId):
+    doc=Doctor.query.get(docId)
+    dd=Deptdoc.query.filter_by(docId=docId).all()
+    for i in dd:
+        i.nDoc-=1
+    db.session.delete(doc)
+    db.session.commit()
+    return redirect('/admin/dashboard')
+
+@app.route('/<deptid>/<docid>/doctor/modify',methods=['GET','POST'])
+def doctordeptModify(deptid,docid):
+    return doctorModify(deptid=deptid,docid=docid)
+
+@app.route('/<docid>/doctor/modify',methods=['GET','POST'])
+def doctorModify(docid,deptid=None):
+    if request.method=='POST':
+        email=request.form.get('email')
+        name=request.form.get('name')
+        gender=request.form.get('gender')
+        exp=request.form.get('exp')
+        qual=request.form.get('qual')
+        password=request.form.get('pass')
+        from_=request.form.get('from').split(':')
+        to=request.form.get('to').split(':')
+        day=request.form.get('day')
+        file=request.files["photo"]
+        s=Doctor.query.get(docid)
+        if name:
+            s.name=name
+        if gender:
+            s.gender=gender
+        if exp:
+            s.exp=exp
+        if qual:
+            s.qual=qual
+        if email:
+            s.email=email
+        if password:
+            s.password=password
+        deptid=request.form.get('deptid')
+        modify=request.form.get('modify')
+        if not modify:         
+            Department.query.get(deptid).nDoc+=1
+        dd=Deptdoc.query.filter_by(deptid=deptid,docid=docid).first()
+        if not dd:
+            dd=Deptdoc(id=idgen('DD'),deptid=deptid,docid=s.id)
+            db.session.add(dd)
+        
+        if day:
+            day=Days.query.filter_by(day=day,ddid=dd.id).first()
+            if day:
+                slot=Slots(id=idgen('SL'),daysid=day.id,from_=datetime.time(int(from_[0]),int(from_[1])),to=datetime.time(int(to[0]),int(to[1])))
+            else:
+                day=Days(id=idgen('DA'),ddid=dd.id,day=request.form.get('day'))
+                db.session.add(day)
+            slot=Slots(id=idgen('SL'),daysid=day.id,from_=datetime.time(int(from_[0]),int(from_[1])),to=datetime.time(int(to[0]),int(to[1])))
+            db.session.add(slot)
+        if(file):
+            max_size = 1024 * 1024
+    
+
+            if file and allowed_file(file.filename):
+                # Process the file (e.g., save it)
+                if len(file.read()) > max_size:
+                    flash('Image size too large!')
+                else:
+                    file.seek(0)
+                    s.photo=file
+                    dp=secure_filename(s.photo.filename)
+                    photo=str(uuid.uuid1())+"_"+dp
+                    s.photo.save(os.path.join(app.config['UPLOAD_FOLDER'],photo))
+                    s.photo=photo
+                    
+                    db.session.commit()
+                    return redirect('/admin/dashboard')
+            else:
+                flash('Invalid image type')
+        else:
+            db.session.commit()
+            return redirect('/admin/dashboard')
+    global days
+    return render_template('doctor-modify.html',days=days,doctor=Doctor.query.get(docid),department=Department.query.get(deptid))
+
+@app.route('/<docId>/doctor/details')
+def docDetails(docId):
+    deptdocs=[]
+    for d in Deptdoc.query.filter_by(docid=docId).all():
+        daysrec=Days.query.filter_by(ddid=d.id).all()
+        schedule={}
+
+        for day in daysrec:
+            slots=Slots.query.filter_by(daysid=day.id).all()
+            if(days[day.day] in schedule):
+                schedule[days[day.day]]+=[(i.from_.strftime('%I:%M %p'),i.to.strftime('%I:%M %p')) for i in slots]
+            else:
+                schedule[days[day.day]]=[(i.from_.strftime('%I:%M %p'),i.to.strftime('%I:%M %p')) for i in slots]
+        dept=Department.query.get(d.deptid)
+        hosp=Hospital.query.get(dept.hid)
+        deptdocs.append((hosp,dept,schedule))
+    return render_template('doctor_details.html',doctor=Doctor.query.get(docId),deptdocs=deptdocs)
+
+@app.route('/<hId>/hospital/details')
+def hospitalDetails(hId):
+    return render_template('hospital_details.html',Hospital=Hospital.query.get(hId))
+
+@app.route('/<deptId>/department/details')
+def departmentDetails(deptId):
+    return render_template('department_details.html',Department=Department.query.get(deptId))
+
+@app.route('/<appId>/appointment/details')
+def appoinmentDetails(appId):
+    app=Appointment.query.get(appId)
+    return render_template('appointment_details.html',Appointment=app,patientlist=[(i,Patient.query.get(i.pid)) for i in app.patientlists])
+
+@app.route('/<plid>/patient/arrived')
+def patientArrived(plid):
+    plist=Patientlist.query.get(plid)
+    plist.status='Arrived'
+    db.session.commit()
+    return redirect(f'/{plist.aid}/appointment/details')
+
+@app.route('/<plid>/patient/cancelled')
+def patientCancelled(plid):
+    plist=Patientlist.query.get(plid)
+    plist.status='Cancelled'
+    db.session.commit()
+    return redirect(f'/{plist.aid}/appointment/details')
 
 @app.route('/hospital/create',methods=['GET','POST'])
 def hospitalCreate():
@@ -91,48 +243,73 @@ def deptCreate(hId):
     return render_template('dept_create.html',hospital=hospital)
 
 @app.route('/<hid>/<deptid>/doctor/create',methods=['GET','POST'])
-def docCreate(hid,deptid):
+def docCreate(hid,deptid,modify=None):
     if request.method=='POST':
-        s=Doctor(id=idgen('Do'),name=request.form.get('name'),gender=request.form.get('gender'),exp=request.form.get('exp'),qual=request.form.get('qual'),email=request.form.get('email'),password=request.form.get('pass'))
-        db.session.add(s)
-        
-        from_=request.form.get('from').split(':')
-        to=request.form.get('to').split(':')
-        Department.query.get(deptid).nDoc+=1
-        d=Deptdoc(id=idgen('DD'),deptid=deptid,docid=s.id)
-        db.session.add(d)
-    
-        
-        day=Days(id=idgen('DA'),ddid=d.id,day=request.form.get('day'))
-        db.session.add(day)
-        slot=Slots(id=idgen('SL'),daysid=day.id,from_=datetime.time(int(from_[0]),int(from_[1])),to=datetime.time(int(to[0]),int(to[1])))
-        db.session.add(slot)
-        file=request.files["photo"]
-        if(file):
-            max_size = 1024 * 1024
-    
-
-            if file and allowed_file(file.filename):
-                # Process the file (e.g., save it)
-                if len(file.read()) > max_size:
-                    flash('Image size too large!')
-                else:
-                    file.seek(0)
-                    s.photo=file
-                    dp=secure_filename(s.photo.filename)
-                    photo=str(uuid.uuid1())+"_"+dp
-                    s.photo.save(os.path.join(app.config['UPLOAD_FOLDER'],photo))
-                    s.photo=photo
-                    
-                    db.session.commit()
-                    return redirect('/admin/dashboard')
-            else:
-                flash('Invalid image type')
+        email=request.form.get('email')
+        if (Doctor.query.filter_by(email=email).first() or User.query.filter_by(email=email).first()):
+            flash('Account already exist')
         else:
-            db.session.commit()
-            return redirect('/admin/dashboard')
-        global days
-    return render_template('doc_create.html',days=days,hospital=Hospital.query.get(hid),department=Department.query.get(deptid))
+            name=request.form.get('name')
+            gender=request.form.get('gender')
+            exp=request.form.get('exp')
+            qual=request.form.get('qual')
+            password=request.form.get('pass')
+            from_=request.form.get('from').split(':')
+            to=request.form.get('to').split(':')
+            day=request.form.get('day')
+            file=request.files["photo"]
+            
+            s=Doctor(id=idgen('Do'),name=name,gender=gender,exp=exp,qual=qual,email=email,password=password)
+            db.session.add(s)
+            Department.query.get(deptid).nDoc+=1
+            d=Deptdoc(id=idgen('DD'),deptid=deptid,docid=s.id)
+            db.session.add(d)
+            day=Days(id=idgen('DA'),ddid=d.id,day=day)
+            db.session.add(day)
+            slot=Slots(id=idgen('SL'),daysid=day.id,from_=datetime.time(int(from_[0]),int(from_[1])),to=datetime.time(int(to[0]),int(to[1])))
+            db.session.add(slot)
+                
+    
+                
+                
+
+
+            
+            
+        
+                
+
+            
+        
+            
+            
+            
+            
+            if(file):
+                max_size = 1024 * 1024
+        
+
+                if file and allowed_file(file.filename):
+                    # Process the file (e.g., save it)
+                    if len(file.read()) > max_size:
+                        flash('Image size too large!')
+                    else:
+                        file.seek(0)
+                        s.photo=file
+                        dp=secure_filename(s.photo.filename)
+                        photo=str(uuid.uuid1())+"_"+dp
+                        s.photo.save(os.path.join(app.config['UPLOAD_FOLDER'],photo))
+                        s.photo=photo
+                        
+                        db.session.commit()
+                        return redirect('/admin/dashboard')
+                else:
+                    flash('Invalid image type')
+            else:
+                db.session.commit()
+                return redirect('/admin/dashboard')
+    global days
+    return render_template('doc_create.html',days=days,hospital=Hospital.query.get(hid),department=Department.query.get(deptid),modify=Doctor.query.get(modify))
 
 
 @app.route('/register',methods=['GET','POST'])
@@ -147,8 +324,8 @@ def register():
             otp=str(Otp())
             
             
-            sender='wevoteteam@gmail.com'
-            pwd='bdsdenzmphtgrymb'
+            sender='bookmydoctor01@gmail.com'
+            pwd='dtnbgzyxldgnkjfc'
             body="""
 
             Your otp to login: """+otp+"""
@@ -213,10 +390,13 @@ def addMember(userId):
         db.session.add(p)
         u.verified=True
         u.nMembers+=1
-        db.session.commit()
+        db.session.commit
         return redirect(f'/{userId}/dashboard')
+    maxi=False
+    if(u.nMembers>=6):
+        maxi=True
     global states,cities
-    return render_template('add_member.html',user=u,states=states,cities=cities)
+    return render_template('add_member.html',user=u,states=states,cities=cities,maxi=maxi)
 
 @app.route('/<userId>/dashboard')
 def userDashboard(userId):
@@ -224,24 +404,44 @@ def userDashboard(userId):
     patients=Patient.query.filter_by(uid=userId).all()
     deptdocs=[]
     docdays=[]
-    for i in Deptdoc.query.all():
-        deptdocs.append((i,Doctor.query.get(i.docid)))
-        global days
-        docdays.append((Doctor.query.get(i.docid),i,[days[i.day] for i in Days.query.filter_by(ddid=i.id).all()]))
-
-       
-        
-
-        
-
-    slots=[(Days.query.get(i.daysid),i) for i in Slots.query.all()]
-
-    global states,cities
+    docnotavaildays={}
     import datetime
     date=datetime.datetime.now()
     vdate=date+datetime.timedelta(days=15)
+    for i in Deptdoc.query.all():
+        global days
+        docnotavaildays[i]=[]
+        daysrec=i.days
+        weekdays=[days[i.day] for i in daysrec]
+        for eachday in daysrec:
+            for eachslot in eachday.slots:
+                appointsoneachslot=Appointment.query.filter_by(slotid=eachslot.id).all()
+                for eachapp in appointsoneachslot:
+                    if eachapp.date in docnotavaildays[i]:
+                        if eachapp.availability:
+                            docnotavaildays[i].remove(eachapp)
+                    elif not eachapp.availability:
+                        docnotavaildays[i]+=[eachapp.date]
+
+        deptdocs.append((i,Doctor.query.get(i.docid),docnotavaildays[i]))
+        docdays.append((Doctor.query.get(i.docid),i,weekdays))
+    print(docnotavaildays)
+    patientsappointment=[]
+    for i in u.patients:
+        patientsappointment.append((i,i.patientlists,[Appointment.query.get(i.aid) for i in i.patientlists]))
+
+
+        
+    slots={}
+    for day in Days.query.all():
+        slots[day]=Slots.query.filter_by(daysid=day.id).all()
+
+
+    global states,cities
     
-    return render_template('user_dash.html',slots=slots,docdays=docdays,date=date,vdate=vdate,user=u,patients=patients,states=states,cities=cities,hospitals=Hospital.query.all(),departments=Department.query.all(),deptdocs=deptdocs)
+
+    
+    return render_template('user_dash.html',slots=slots,docdays=docdays,date=date,vdate=vdate,user=u,patients=patients,states=states,cities=cities,hospitals=Hospital.query.all(),departments=Department.query.all(),deptdocs=deptdocs,patientsappointment=patientsappointment)
 
 @app.route('/<userId>/book',methods=['GET','POST'])
 def book(userId):
@@ -253,27 +453,28 @@ def book(userId):
         slotid=request.form.get('slot')
         appoint=Appointment.query.filter_by(date=date,slotid=slotid).first()
         if(appoint):
-            if(appoint.token==20):
-                return 'already full'
-            appoint.token+=1
-            token=appoint.token
+            if(appoint.tokenCount==20):
+                flash('sorry! booking already full')
+            appoint.tokenCount+=1
+            tokenCount=appoint.tokenCount
             aid=appoint.id
             
         else:
-            newappoint=Appointment(id=idgen('AP'),date=date,slotid=slotid,token=1)
-            token=1
+            newappoint=Appointment(id=idgen('AP'),date=date,slotid=slotid,tokenCount=1)
+            tokenCount=1
             db.session.add(newappoint)
             aid=newappoint.id
         deptdoc=Deptdoc.query.get(ddid)
         dept=Department.query.get(deptdoc.deptid)
         hosp=Hospital.query.get(dept.hid)
         doc=Doctor.query.get(deptdoc.docid)
-        newpatient=Patientlist(id=idgen('PL'),aid=aid,pid=pid)
+        newpatient=Patientlist(id=idgen('PL'),aid=aid,pid=pid,token=tokenCount)
         patient=Patient.query.get(pid)
         slot=Slots.query.get(slotid)
         email=User.query.get(patient.uid).email
-        sender='wevoteteam@gmail.com'
-        pwd='bdsdenzmphtgrymb'
+        sender='bookmydoctor01@gmail.com'
+        pwd='dtnbgzyxldgnkjfc'
+        subject='Appointment Booking Details'
         body=f"""
 Dear {patient.name},
 Your appointment has been successfully booked.
@@ -288,14 +489,15 @@ Appointment Details given below:
     Doctor : Dr. {doc.name}
     Date : {date}
     Slot : {slot.from_.strftime('%I:%M %p')} - {slot.to.strftime('%I:%M %p')}
-    Token No. : {token}
+    Token No. : {newpatient.token}
     Patient Name : {patient.name}
     Gender : {patient.gender}
             
 Regards,
-Team BookYourDoctor
+Team BookMyDoctor
             """
         em=EmailMessage()
+        em['Subject']=subject
         em['From']=sender
         em['To']=email
         em.set_content(body)
@@ -321,11 +523,13 @@ def doctorDashboard(docid):
 
         for day in daysrec:
             slots=Slots.query.filter_by(daysid=day.id).all()
-            schedule[days[day.day]]=[(i.from_.strftime('%I:%M %p'),i.to.strftime('%I:%M %p')) for i in slots]
+            if(days[day.day] in schedule):
+                schedule[days[day.day]]+=[(i.from_.strftime('%I:%M %p'),i.to.strftime('%I:%M %p')) for i in slots]
+            else:
+                schedule[days[day.day]]=[(i.from_.strftime('%I:%M %p'),i.to.strftime('%I:%M %p')) for i in slots]
         dept=Department.query.get(d.deptid)
         hosp=Hospital.query.get(dept.hid)
         deptdocs.append((hosp,dept,schedule))
-        print(schedule)
         today=datetime.date.today()
         for i in range(0,31):
             date=today+datetime.timedelta(days=i)
@@ -333,12 +537,38 @@ def doctorDashboard(docid):
                 for slot in  Slots.query.filter_by(daysid=Days.query.filter_by(ddid=d.id,day=date.weekday()+1).first().id).all():
                     appoint=Appointment.query.filter_by(date=date,slotid=slot.id).first()
                     if(appoint):
-                        docdates.append((hosp,dept,date,slot.from_,slot.to,appoint.token))
+                        docdates.append((hosp,dept,date,slot.from_.strftime('%I:%M %p'),slot.to.strftime('%I:%M %p'),appoint.tokenCount,appoint))
                     else:
-                        docdates.append((hosp,dept,date,slot.from_.strftime('%I:%M %p'),slot.to.strftime('%I:%M %p'),0))
-    print(docdates)
+                        appoint=Appointment(id=idgen('AP'),date=date,slotid=slot.id)
+                        db.session.add(appoint)
+                        db.session.commit()
+                        docdates.append((hosp,dept,date,slot.from_.strftime('%I:%M %p'),slot.to.strftime('%I:%M %p'),0,appoint))
     return render_template('doctor_dash.html',doctor=Doctor.query.get(docid),deptdocs=deptdocs,docdates=docdates)
 
+@app.route('/<docid>/<aid>/appointment/cancel',methods=['GET','POST'])
+def docCancels(docid,aid):
+    if request.method=='POST':
+        appoint=Appointment.query.get(aid)
+        message=request.form.get('message')
+        if message:
+            appoint.message=message
+        appoint.availability=False
+        db.session.commit()
+        return redirect(f'/{docid}/doctor/dashboard')
+    return redirect(f'/{docid}/doctor/dashboard')
+
+@app.route('/<pid>/<aid>/<plid>/patientview')
+def patientView(pid,aid,plid):
+    patient=Patient.query.get(pid)
+    appointment=Appointment.query.get(aid)
+    slot=Slots.query.get(appointment.slotid)
+    day=Days.query.get(slot.daysid)
+    dd=Deptdoc.query.get(day.ddid)
+    doc=Doctor.query.get(dd.docid)
+    dept=Department.query.get(dd.deptid)
+    hosp=Hospital.query.get(dept.hid)
+    patlist=Patientlist.query.get(plid)
+    return render_template('patient_view.html',patient=patient,appointment=appointment,patlist=patlist,hospital=hosp,department=dept,doctor=doc,slot=slot,user=User.query.get(patient.uid))
 
 @app.errorhandler(404)
 def page_not_found(e):

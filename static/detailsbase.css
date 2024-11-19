@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 .btn.btn-primary{
     border-radius: 20px;
     margin-left: 10px;
+=======
+.btn.btn.btn-primary{
+    padding: 10px;
+>>>>>>> 3412b2fe2cf8ee91ad273c4b8d62b0fd1387c76e
 }

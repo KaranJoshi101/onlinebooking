@@ -1,11 +1,20 @@
-{%extends 'detailsbase.html'%}
+{%extends 'adminbase.html'%}
 {%block content%}
+<div class="d-flex justify-content-around">
+   <div></div>
+   <h2 class="text-center mt-3 mb-3">Hospital Details</h2>
+   
 <div>
-   <h4 class="pt-3" >Name : Dr. {{Hospital.name}}</h4>
-   <h6>State : {{Hospital.state}}</h6>
-   <h6>City : {{Hospital.city}}</h6>
-   <h6>No. of departments : {{Hospital.nDept}}</h6>
-   <h6>Rating : {{Hospital.rating}}</h6>
-   <h6>ID:{{Hospital.id}}</h6>
+   <a type="button" class="btn btn-primary" href="/admin/dashboard" ><- Go Back </a>
+ </div>
+</div>
+<div class="container">
+   <h4>ID : {{Hospital.id}}</h4>
+   <h4>Hospital Name : {{Hospital.name}}</h4>
+   <h4>State : {{Hospital.state}}</h4>
+   <h4>City : {{Hospital.city}}</h4>
+   <h4>No. of departments : {{Hospital.nDept}}</h4>
+   <h4>Rating : {{Hospital.rating}}</h4>
+   
    </div>
 {%endblock%}

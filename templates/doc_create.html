@@ -1,17 +1,20 @@
-{%extends 'base.html'%}
+
+{%extends 'adminbase.html'%}
 {%block content%}
 <div class="container col-6 shadow p-3 mb-5 bg-body rounded top-cont  pb-5 mt-5">
     <div class="text-center d-flex justify-content-between mb-5" >
         <div></div>
         <h2 style="font-family: sans-serif; font-weight: bold;">{{hospital.name}}</h2>
-    
+      
     <div class="text-end"><a href="/admin/dashboard" type="button" class="btn btn-dark btn-sm px-3" id="form-slot-back"> > Exit</a></div>
     </div>
-    
+    {%for message in get_flashed_messages()%}
+        <div class="text-center"><p style="color:red;font-size: large;">{{message}}</p></div>
+        {%endfor%}
     <h4 class="pl-5" style="font-family: sans-serif; font-weight: bold;">{{department.name}} Department</h4>
         <h5 class="pt-2 pl-5">Add Doctor</h5>
     
-   
+        
     
     <div class="select-detail-hospital pt-5 px-5">
         <form action="/{{hospital.id}}/{{department.id}}/doctor/create" enctype="multipart/form-data" method="post">
@@ -74,13 +77,14 @@
                     <input class="form-control" type="file" id="formFile" name="photo">
               </div>
               
-              {%for message in get_flashed_messages()%}
-              <p style="color:red;font-size: small;">{{message}}</p>
-              {%endfor%}
+              
 
               
               <div class="text-center mt-4"><button type="submit" class="btn btn-success px-5">Add</button></div>
             </form>
     </div>
 </div>
+<script>
+  
+</script>
 {%endblock%}
