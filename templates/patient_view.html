@@ -1,0 +1,24 @@
+{%extends 'userbase.html'%}
+{%block content%}
+<div class="d-flex justify-content-around">
+    <div></div>
+    <h2 class="text-center mt-3 mb-3">Patient Appointment Details</h2>
+    
+ <div>
+    <a type="button" class="btn btn-primary" href="/{{patient.uid}}/dashboard" ><- Go Back </a>
+  </div>
+ </div>
+ 
+       <div class="container">
+          <h4>Hospital Name : {{hospital.name}}</h4>
+          <h4>Department Name : {{department.name}}</h4>
+          <h4>Location : {{hospital.city}}, {{hospital.state}}</h4>
+          <h4>Doctor Name : Dr. {{doctor.name}}</h4>
+          <h4>Booked Date : {{appointment.date.strftime("%d %b, %Y")}}</h4>
+          <h4>Booked Slot : {{slot.from_.strftime("%I:%M %p")}} - {{slot.to.strftime("%I:%M %p")}}</h4>
+          <h4>Token No. : {{patlist.token}}</h4>
+          <h4>Patient Name : {{patient.name}}</h4>
+          <h4>Patient Gender : {{patient.gender}}</h4>
+          <h4>Appointment Status : {{patlist.status}}</h4>
+          </div>
+{%endblock%}

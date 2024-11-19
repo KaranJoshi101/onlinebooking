@@ -76,35 +76,79 @@ dept.addEventListener('click',()=>{
         }
     }
 })
-var msg
+var doc
 let docday=document.querySelectorAll('.docday')
 doctor.addEventListener('click',()=>{
     if(doctor.value){
-        msg=document.querySelector(`#${doctor.value}`)
-       msg.style.display='block'
+        doc=document.querySelector(`#${doctor.value}`)
+       doc.style.display='block'
     }
     
 })
-
-bookdate.addEventListener('click',()=>{
+let msg=document.querySelector('#msg');
+var date;
+bookdate.addEventListener('change',()=>{
     
     if(bookdate.value){
-
+        msg2.style.display='none';
         slot.removeAttribute('disabled')
-        let day=new Date(bookdate.value)
-        day=day.getDay();
+        date=new Date(bookdate.value)
+        
+        day=date.getDay();
         slots=document.querySelectorAll(`.${doctor.value}`)
+        let count=false
         for(s of slots){
-            if(s.classList.contains(day))
-                s.style.display='block';
+            if(s.classList.contains(day)){
+
+            
+                s.style.display='';
+                count=true
+            }
+            else{
+                s.style.display='none';
+            }
+        }
+        if(!count){
+            msg.style.display=''
+            slot.disabled=true
+        }
+        else{
+            msg.style.display='none'
         }
     }
 })
 
 slot.addEventListener('click',()=>{
     if(slot.value){
-        document.querySelector('#bookBtn').removeAttribute('disabled')
-        patient=document.querySelector('#patient')
+        msg2.style.display='none';
+        async function getData() {
+            const url =`http://127.0.0.1:5000/api/appointment/${slot.value}/${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
+            try {
+              const response = await fetch(url);
+              if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+              }
+          
+              const json = await response.json();
+              return json
+            } catch (error) {
+              console.error(error.message);
+            }
+          }
+          data=getData()
+          data.then((value)=>{if(value[0].avail){
+            document.querySelector('#bookBtn').removeAttribute('disabled')
+            patient=document.querySelector('#patient')
+          }
+          else{
+            msg2=document.querySelector('#msg2')
+            msg2.innerText='Sorry! Doctor is unavailable in this slot. Try another slot or date.'
+            msg2.style.display='';
+          }})
+            
+           
+          
+        
 members=document.querySelectorAll('.member')
 for(member of members){
     if(member.innerText=='selected'){

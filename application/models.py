@@ -49,6 +49,7 @@ class Appointment(db.Model):
     date=db.Column(db.Date)
     slotid=db.Column(db.String(),db.ForeignKey('slots.id'))
     availability=db.Column(db.Boolean,default=True)
+    message=db.Column(db.String(),default='Available')
     tokenCount=db.Column(db.Integer,default=0)
     patientlists=db.relationship('Patientlist',backref='appointment')
 
