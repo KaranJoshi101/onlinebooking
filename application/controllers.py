@@ -206,6 +206,20 @@ def appoinmentDetails(appId):
     app=Appointment.query.get(appId)
     return render_template('appointment_details.html',Appointment=app,patientlist=[(i,Patient.query.get(i.pid)) for i in app.patientlists])
 
+@app.route('/<plid>/patient/arrived')
+def patientArrived(plid):
+    plist=Patientlist.query.get(plid)
+    plist.status='Arrived'
+    db.session.commit()
+    return redirect(f'/{plist.aid}/appointment/details')
+
+@app.route('/<plid>/patient/cancelled')
+def patientCancelled(plid):
+    plist=Patientlist.query.get(plid)
+    plist.status='Cancelled'
+    db.session.commit()
+    return redirect(f'/{plist.aid}/appointment/details')
+
 @app.route('/hospital/create',methods=['GET','POST'])
 def hospitalCreate():
     if request.method=='POST':
@@ -390,10 +404,28 @@ def userDashboard(userId):
     patients=Patient.query.filter_by(uid=userId).all()
     deptdocs=[]
     docdays=[]
+    docnotavaildays={}
+    import datetime
+    date=datetime.datetime.now()
+    vdate=date+datetime.timedelta(days=15)
     for i in Deptdoc.query.all():
-        deptdocs.append((i,Doctor.query.get(i.docid)))
         global days
-        docdays.append((Doctor.query.get(i.docid),i,[days[i.day] for i in Days.query.filter_by(ddid=i.id).all()]))
+        docnotavaildays[i]=[]
+        daysrec=i.days
+        weekdays=[days[i.day] for i in daysrec]
+        for eachday in daysrec:
+            for eachslot in eachday.slots:
+                appointsoneachslot=Appointment.query.filter_by(slotid=eachslot.id).all()
+                for eachapp in appointsoneachslot:
+                    if eachapp.date in docnotavaildays[i]:
+                        if eachapp.availability:
+                            docnotavaildays[i].remove(eachapp)
+                    elif not eachapp.availability:
+                        docnotavaildays[i]+=[eachapp.date]
+
+        deptdocs.append((i,Doctor.query.get(i.docid),docnotavaildays[i]))
+        docdays.append((Doctor.query.get(i.docid),i,weekdays))
+    print(docnotavaildays)
     patientsappointment=[]
     for i in u.patients:
         patientsappointment.append((i,i.patientlists,[Appointment.query.get(i.aid) for i in i.patientlists]))
@@ -404,10 +436,10 @@ def userDashboard(userId):
     for day in Days.query.all():
         slots[day]=Slots.query.filter_by(daysid=day.id).all()
 
+
     global states,cities
-    import datetime
-    date=datetime.datetime.now()
-    vdate=date+datetime.timedelta(days=15)
+    
+
     
     return render_template('user_dash.html',slots=slots,docdays=docdays,date=date,vdate=vdate,user=u,patients=patients,states=states,cities=cities,hospitals=Hospital.query.all(),departments=Department.query.all(),deptdocs=deptdocs,patientsappointment=patientsappointment)
 
@@ -418,7 +450,6 @@ def book(userId):
         date=list(map(int,request.form.get('bookdate').split('-')))
         date=datetime.date(date[0],date[1],date[2])
         pid=request.form.get('patient')
-        print(pid)
         slotid=request.form.get('slot')
         appoint=Appointment.query.filter_by(date=date,slotid=slotid).first()
         if(appoint):
@@ -506,12 +537,38 @@ def doctorDashboard(docid):
                 for slot in  Slots.query.filter_by(daysid=Days.query.filter_by(ddid=d.id,day=date.weekday()+1).first().id).all():
                     appoint=Appointment.query.filter_by(date=date,slotid=slot.id).first()
                     if(appoint):
-                        docdates.append((hosp,dept,date,slot.from_.strftime('%I:%M %p'),slot.to.strftime('%I:%M %p'),appoint.tokenCount))
+                        docdates.append((hosp,dept,date,slot.from_.strftime('%I:%M %p'),slot.to.strftime('%I:%M %p'),appoint.tokenCount,appoint))
                     else:
-                        docdates.append((hosp,dept,date,slot.from_.strftime('%I:%M %p'),slot.to.strftime('%I:%M %p'),0))
-        print(docdates)
+                        appoint=Appointment(id=idgen('AP'),date=date,slotid=slot.id)
+                        db.session.add(appoint)
+                        db.session.commit()
+                        docdates.append((hosp,dept,date,slot.from_.strftime('%I:%M %p'),slot.to.strftime('%I:%M %p'),0,appoint))
     return render_template('doctor_dash.html',doctor=Doctor.query.get(docid),deptdocs=deptdocs,docdates=docdates)
 
+@app.route('/<docid>/<aid>/appointment/cancel',methods=['GET','POST'])
+def docCancels(docid,aid):
+    if request.method=='POST':
+        appoint=Appointment.query.get(aid)
+        message=request.form.get('message')
+        if message:
+            appoint.message=message
+        appoint.availability=False
+        db.session.commit()
+        return redirect(f'/{docid}/doctor/dashboard')
+    return redirect(f'/{docid}/doctor/dashboard')
+
+@app.route('/<pid>/<aid>/<plid>/patientview')
+def patientView(pid,aid,plid):
+    patient=Patient.query.get(pid)
+    appointment=Appointment.query.get(aid)
+    slot=Slots.query.get(appointment.slotid)
+    day=Days.query.get(slot.daysid)
+    dd=Deptdoc.query.get(day.ddid)
+    doc=Doctor.query.get(dd.docid)
+    dept=Department.query.get(dd.deptid)
+    hosp=Hospital.query.get(dept.hid)
+    patlist=Patientlist.query.get(plid)
+    return render_template('patient_view.html',patient=patient,appointment=appointment,patlist=patlist,hospital=hosp,department=dept,doctor=doc,slot=slot,user=User.query.get(patient.uid))
 
 @app.errorhandler(404)
 def page_not_found(e):

@@ -150,7 +150,7 @@
             <th scope="row"><a href="/{{deptdoc.deptid}}/department/details">{{deptdoc.deptid}}</a></th>
             <th scope="row"><a href="/{{deptdoc.docid}}/doctor/details">{{deptdoc.docid}}</a></th>
             <td>{{slot.from_}} to {{slot.to}}</td>
-            <td>{%if appoint.availability%}Doctor Available{%else%}Unavailable{%endif%}</td>
+            {%if appoint.availability%}<td style="color: green; font-weight: bold;">Doctor Available</td>{%else%}<td style="color:red;font-weight: bold;">Appointment Cancelled<br>{{appoint.message}}{%endif%}</td>
             <td><a type="button" class="btn btn-info" href="/{{appoint.id}}/appointment/details">View Details</a></td>
           </tr>
         {%endfor%}

@@ -1,5 +1,6 @@
 from flask import Flask
 from application.database import db
+from application.resources import api,TransApi
 #create flask object
 app=None
 def create_app():
@@ -12,7 +13,7 @@ def create_app():
     app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
     app.config['SECRET_KEY']="this is my secret key"
     db.init_app(app)
- 
+    api.init_app(app)
     app.app_context().push() #not very clear about this as of now but it kind of tells the 
     return app
     
