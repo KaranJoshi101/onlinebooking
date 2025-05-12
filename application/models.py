@@ -43,6 +43,8 @@ class Deptdoc(db.Model):
     deptid=db.Column(db.String(),db.ForeignKey('department.id'))
     docid=db.Column(db.String(),db.ForeignKey('doctor.id'))
     days=db.relationship('Days',backref='deptdoc')
+    rating=db.Column(db.Float,default=0.0)
+    pCount=db.Column(db.Integer,default=0)
 
 class Appointment(db.Model):
     id=db.Column(db.String(),primary_key=True)
@@ -58,6 +60,7 @@ class Patientlist(db.Model):
     aid=db.Column(db.String(),db.ForeignKey('appointment.id'))
     pid=db.Column(db.String(),db.ForeignKey('patient.id'))
     token=db.Column(db.Integer)
+    remarks=db.Column(db.String(),default='')
     status=db.Column(db.String(),default='booked')
 
 class User(db.Model):

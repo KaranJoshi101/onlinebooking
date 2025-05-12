@@ -32,7 +32,7 @@
             <input type="number" form-control id="sixth" name="six" disabled />
           </div>
           {%for message in get_flashed_messages()%}
-          <p style="color:red;font-size: small;">message</p>
+          <p style="color:red;font-size: small;">{{message}}</p>
           {%endfor%}
           <button>Verify OTP</button>
         </form>

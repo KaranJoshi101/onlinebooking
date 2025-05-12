@@ -49,7 +49,10 @@ def login():
             return redirect('/admin/dashboard')
         d=Doctor.query.filter_by(email=email).first()
         if(d):
-            return redirect(f'/{d.id}/doctor/dashboard')
+            if(d.password == password):
+                return redirect(f'/{d.id}/doctor/dashboard')
+            else:
+                flash("Invalid Credentials")
         u = User.query.filter_by(email=email).first()
         if(u):
             if(u.password == password):
@@ -219,6 +222,24 @@ def patientCancelled(plid):
     plist.status='Cancelled'
     db.session.commit()
     return redirect(f'/{plist.aid}/appointment/details')
+
+@app.route('/<plid>/patient/close',methods=['GET','POST'])
+def patientClose(plid):
+    if request.method=='POST':
+        plist=Patientlist.query.get(plid)
+        appoint=Appointment.query.get(plist.aid)
+        dd=Deptdoc.query.get(Days.query.get(Slots.query.get(appoint.slotid).daysid).ddid)
+        rating=request.form.get('rating')
+        note=request.form.get('note')
+        
+        plist.status='Closed'
+        if note:
+            plist.remarks=note
+        dd.rating=(dd.rating*dd.pCount+float(rating))/(dd.pCount+1)
+        dd.pCount+=1
+        db.session.commit()
+        patient=Patient.query.get(plist.pid)
+        return redirect(f'/{User.query.get(patient.uid).id}/dashboard')
 
 @app.route('/hospital/create',methods=['GET','POST'])
 def hospitalCreate():
@@ -390,7 +411,7 @@ def addMember(userId):
         db.session.add(p)
         u.verified=True
         u.nMembers+=1
-        db.session.commit
+        db.session.commit()   
         return redirect(f'/{userId}/dashboard')
     maxi=False
     if(u.nMembers>=6):
@@ -425,7 +446,6 @@ def userDashboard(userId):
 
         deptdocs.append((i,Doctor.query.get(i.docid),docnotavaildays[i]))
         docdays.append((Doctor.query.get(i.docid),i,weekdays))
-    print(docnotavaildays)
     patientsappointment=[]
     for i in u.patients:
         patientsappointment.append((i,i.patientlists,[Appointment.query.get(i.aid) for i in i.patientlists]))
@@ -554,6 +574,32 @@ def docCancels(docid,aid):
             appoint.message=message
         appoint.availability=False
         db.session.commit()
+        sender='bookmydoctor01@gmail.com'
+        pwd='dtnbgzyxldgnkjfc'
+        patlist=appoint.patientlists
+        subject='Booking Cancelled'
+        for i in patlist:
+            i.status='Cancelled'
+            db.session.commit()
+            patient=Patient.query.get(i.pid)
+            user=User.query.get(patient.uid)
+            slot=Slots.query.get(appoint.slotid)
+            body=f"""
+It is to inform patient {patient.name} that your Appointment on {appoint.date}
+in slot {slot.from_} - {slot.to} has been cancelled due to doctor's unavailablity.
+
+We are deeply sorry for any inconvenience caused.
+Regards,
+Team BookYourDoctor"""
+            em=EmailMessage()
+            em['Subject']=subject
+            em['From']=sender
+            em['To']=user.email
+            em.set_content(body)
+            context=ssl.create_default_context()
+            with smtplib.SMTP_SSL('smtp.gmail.com',465,context=context) as smtp:
+                smtp.login(sender,pwd)
+                smtp.sendmail(sender,user.email,em.as_string())
         return redirect(f'/{docid}/doctor/dashboard')
     return redirect(f'/{docid}/doctor/dashboard')
 

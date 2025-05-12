@@ -6,7 +6,39 @@
             <ul class="list-group patient-appointment" id="{{patient.id}}" style="display: none;">
               {%if patientlist|length%}
               {%for plist in patientlist%}
-                <li class="list-group-item d-flex justify-content-between">Date: {{appointment[loop.index-1].date}}, Token No: {{plist.token}}, Status: {{plist.status}}  <a type="button" class="btn btn-info" href="/{{patient.id}}/{{appointment[loop.index-1].id}}/{{plist.id}}/patientview">View Details</a></li>
+                <li class="list-group-item d-flex justify-content-between">Date: {{appointment[loop.index-1].date}}, Token No: {{plist.token}}, Status: {{plist.status}} {%if plist.status=='Closed'%} <a type="button" class="btn btn-success" style="color: white;">Closed</a> {%elif plist.status !='booked'%} <a type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModalCenter{{plist.id}}">Close it?</a>{%endif%}    <a type="button" class="btn btn-info" href="/{{patient.id}}/{{appointment[loop.index-1].id}}/{{plist.id}}/patientview">View Details</a> </li>
+                <div class="modal fade" id="exampleModalCenter{{plist.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Rate Our Service</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <form action="/{{plist.id}}/patient/close"  method="post">
+                      <div class="modal-body">
+                        <label for="doctor"> 
+                          Rate your appointment(out of 5):
+                      </label> 
+                      <input type="number" id="rating" 
+                          name="rating" min="0" 
+                          max="5" step="0.1" required/>
+
+                          <label for="note"> 
+                            Add Remarks (if any):
+                        </label> 
+                        <input type="text" id="note"/>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Exit</button>
+                        <button type="submit" class="btn btn-primary">Confirm</button>
+                      </div>
+                    </form>
+                    </div>
+                  </div>
+                </div>   
+        
               {%endfor%}
               {%else%}
               <li class="list-group-item" >No appointment yet!!</li>
@@ -14,7 +46,7 @@
               </ul>
               {%endfor%}
         </ul>
-        <a type="button" class="btn btn-success" id="bookAppointmentBtn">
+        <a type="button" class="btn btn-success" id="bookAppointmentBtn" style="color:white">
             +Book Appointment
         </a>
       </div>

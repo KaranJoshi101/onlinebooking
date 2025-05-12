@@ -1,6 +1,6 @@
 let state=document.querySelector('#state');
 var city=document.querySelector('#city');
-    state.addEventListener('click',()=>{
+    state.addEventListener('change',()=>{
         if(state.value){
             city.placeholder='Select city'
             city.value='';
