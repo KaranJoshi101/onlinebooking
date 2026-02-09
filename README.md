@@ -5,3 +5,5 @@ Steps to run:
   - open folder in command prompt
   - venv\Scripts\activate
   - python main.py
+  - OR
+  - venv\Scripts\python main.py
