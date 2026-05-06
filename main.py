@@ -8,7 +8,7 @@ def create_app():
     app.debug=True
 
     app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///onlinebooking.sqlite3'
-    UPLOAD_FOLDER='static\images'
+    UPLOAD_FOLDER='./static/images'
 
     app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
     app.config['SECRET_KEY']="this is my secret key"
