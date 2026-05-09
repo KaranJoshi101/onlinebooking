@@ -28,12 +28,44 @@ from flask import current_app as app
 import uuid as uuid
 import os
 import datetime
+from pathlib import Path
 from werkzeug.utils import secure_filename
 from email.message import EmailMessage
 import ssl,smtplib
 
 #models content imported in this file
 from .models import *
+
+
+def send_email(subject, body, recipient_email):
+    smtp_host = os.getenv('SMTP_HOST', 'smtp.gmail.com')
+    smtp_port = int(os.getenv('SMTP_PORT', '465'))
+    smtp_user = os.getenv('SMTP_USER', '')
+    smtp_password = os.getenv('SMTP_PASSWORD', '')
+    smtp_sender = os.getenv('SMTP_SENDER', smtp_user)
+    use_ssl = os.getenv('SMTP_USE_SSL', 'True').lower() == 'true'
+    use_tls = os.getenv('SMTP_USE_TLS', 'False').lower() == 'true'
+
+    if not smtp_user or not smtp_password:
+        raise RuntimeError('SMTP_USER and SMTP_PASSWORD must be set')
+
+    em = EmailMessage()
+    em['Subject'] = subject
+    em['From'] = smtp_sender
+    em['To'] = recipient_email
+    em.set_content(body)
+
+    context = ssl.create_default_context()
+    if use_ssl:
+        with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context) as smtp:
+            smtp.login(smtp_user, smtp_password)
+            smtp.send_message(em)
+    else:
+        with smtplib.SMTP(smtp_host, smtp_port) as smtp:
+            if use_tls:
+                smtp.starttls(context=context)
+            smtp.login(smtp_user, smtp_password)
+            smtp.send_message(em)
 
 @app.route('/')
 def index():
@@ -344,9 +376,7 @@ def register():
         else:    
             otp=str(Otp())
             
-            
-            sender='bookmydoctor01@gmail.com'
-            pwd='dtnbgzyxldgnkjfc'
+            sender=os.getenv('SMTP_SENDER', os.getenv('SMTP_USER', ''))
             body="""
 
             Your otp to login: """+otp+"""
@@ -355,14 +385,11 @@ def register():
             Regards,
             Team BookYourDoctor
             """
-            em=EmailMessage()
-            em['From']=sender
-            em['To']=email
-            em.set_content(body)
-            context=ssl.create_default_context()
-            with smtplib.SMTP_SSL('smtp.gmail.com',465,context=context) as smtp:
-                smtp.login(sender,pwd)
-                smtp.sendmail(sender,email,em.as_string())
+            try:
+                send_email('Your OTP for BookYourDoctor', body, email)
+            except Exception as e:
+                flash(f'Email could not be sent: {e}')
+                return render_template('register.html')
             if(u):
                 u.otp=otp
             else:
@@ -492,8 +519,6 @@ def book(userId):
         patient=Patient.query.get(pid)
         slot=Slots.query.get(slotid)
         email=User.query.get(patient.uid).email
-        sender='bookmydoctor01@gmail.com'
-        pwd='dtnbgzyxldgnkjfc'
         subject='Appointment Booking Details'
         body=f"""
 Dear {patient.name},
@@ -516,15 +541,10 @@ Appointment Details given below:
 Regards,
 Team BookMyDoctor
             """
-        em=EmailMessage()
-        em['Subject']=subject
-        em['From']=sender
-        em['To']=email
-        em.set_content(body)
-        context=ssl.create_default_context()
-        with smtplib.SMTP_SSL('smtp.gmail.com',465,context=context) as smtp:
-            smtp.login(sender,pwd)
-            smtp.sendmail(sender,email,em.as_string())
+        try:
+            send_email(subject, body, email)
+        except Exception as e:
+            flash(f'Booking saved, but email could not be sent: {e}')
         db.session.add(newpatient)
         db.session.commit()
         return redirect(f'/{userId}/dashboard')
@@ -574,8 +594,6 @@ def docCancels(docid,aid):
             appoint.message=message
         appoint.availability=False
         db.session.commit()
-        sender='bookmydoctor01@gmail.com'
-        pwd='dtnbgzyxldgnkjfc'
         patlist=appoint.patientlists
         subject='Booking Cancelled'
         for i in patlist:
@@ -591,15 +609,10 @@ in slot {slot.from_} - {slot.to} has been cancelled due to doctor's unavailablit
 We are deeply sorry for any inconvenience caused.
 Regards,
 Team BookYourDoctor"""
-            em=EmailMessage()
-            em['Subject']=subject
-            em['From']=sender
-            em['To']=user.email
-            em.set_content(body)
-            context=ssl.create_default_context()
-            with smtplib.SMTP_SSL('smtp.gmail.com',465,context=context) as smtp:
-                smtp.login(sender,pwd)
-                smtp.sendmail(sender,user.email,em.as_string())
+            try:
+                send_email(subject, body, user.email)
+            except Exception as e:
+                flash(f'Cancellation email could not be sent to {user.email}: {e}')
         return redirect(f'/{docid}/doctor/dashboard')
     return redirect(f'/{docid}/doctor/dashboard')
 
