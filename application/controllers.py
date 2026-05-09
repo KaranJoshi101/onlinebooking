@@ -28,6 +28,7 @@ from flask import current_app as app
 import uuid as uuid
 import os
 import datetime
+from pathlib import Path
 from werkzeug.utils import secure_filename
 from email.message import EmailMessage
 import ssl,smtplib
@@ -375,9 +376,7 @@ def register():
         else:    
             otp=str(Otp())
             
-            
-            sender='bookmydoctor01@gmail.com'
-            pwd='dtnbgzyxldgnkjfc'
+            sender=os.getenv('SMTP_SENDER', os.getenv('SMTP_USER', ''))
             body="""
 
             Your otp to login: """+otp+"""
@@ -386,14 +385,11 @@ def register():
             Regards,
             Team BookYourDoctor
             """
-            em=EmailMessage()
-            em['From']=sender
-            em['To']=email
-            em.set_content(body)
-            context=ssl.create_default_context()
-            with smtplib.SMTP_SSL('smtp.gmail.com',465,context=context) as smtp:
-                smtp.login(sender,pwd)
-                smtp.sendmail(sender,email,em.as_string())
+            try:
+                send_email('Your OTP for BookYourDoctor', body, email)
+            except Exception as e:
+                flash(f'Email could not be sent: {e}')
+                return render_template('register.html')
             if(u):
                 u.otp=otp
             else:
