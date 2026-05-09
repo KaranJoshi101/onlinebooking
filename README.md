@@ -53,8 +53,8 @@ UPLOAD_FOLDER=./static/images
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=465
 SMTP_USER=<your_smtp_username>
-SMTP_PASSWORD=mpaodasmnaequinf
-SMTP_SENDER=support.onlinebooking@gmail.com
+SMTP_PASSWORD=<your_smtp_app_password>
+SMTP_SENDER=<your_sender_name_or_email>
 SMTP_USE_SSL=True
 SMTP_USE_TLS=False
 ```
