@@ -1,0 +1,90 @@
+✓ Connected to SQLite: instance/onlinebooking.sqlite3
+✓ Connected to PostgreSQL using DATABASE_URL
+
+================================================================================
+TABLE EXISTENCE CHECK
+================================================================================
+✓ Table 'appointment' exists in PostgreSQL
+✓ Table 'days' exists in PostgreSQL
+✓ Table 'department' exists in PostgreSQL
+✓ Table 'deptdoc' exists in PostgreSQL
+✓ Table 'doctor' exists in PostgreSQL
+✓ Table 'hospital' exists in PostgreSQL
+✓ Table 'patient' exists in PostgreSQL
+✓ Table 'patientlist' exists in PostgreSQL
+✓ Table 'slots' exists in PostgreSQL
+✓ Table 'user' exists in PostgreSQL
+
+================================================================================
+ROW COUNT VALIDATION
+================================================================================
+✓ 'appointment': 50 rows (matched)
+✓ 'days': 5 rows (matched)
+✓ 'department': 5 rows (matched)
+✓ 'deptdoc': 4 rows (matched)
+✓ 'doctor': 68 rows (matched)
+✓ 'hospital': 2 rows (matched)
+✓ 'patient': 9 rows (matched)
+✓ 'patientlist': 13 rows (matched)
+✓ 'slots': 6 rows (matched)
+✓ 'user': 4 rows (matched)
+
+Total: SQLite=166, PostgreSQL=166
+✓ Total row count matches
+
+================================================================================
+COLUMN COUNT VALIDATION
+================================================================================
+✓ 'appointment': 6 columns (matched)
+✓ 'days': 3 columns (matched)
+✓ 'department': 5 columns (matched)
+✓ 'deptdoc': 5 columns (matched)
+✓ 'doctor': 8 columns (matched)
+✓ 'hospital': 6 columns (matched)
+✓ 'patient': 8 columns (matched)
+✓ 'patientlist': 6 columns (matched)
+✓ 'slots': 4 columns (matched)
+✓ 'user': 8 columns (matched)
+
+================================================================================
+PRIMARY KEY VALIDATION
+================================================================================
+✓ 'appointment': Primary keys match
+✓ 'days': Primary keys match
+✓ 'department': Primary keys match
+✓ 'deptdoc': Primary keys match
+✓ 'doctor': Primary keys match
+✓ 'hospital': Primary keys match
+✓ 'patient': Primary keys match
+✓ 'patientlist': Primary keys match
+✓ 'slots': Primary keys match
+✓ 'user': Primary keys match
+
+================================================================================
+FOREIGN KEY RELATIONSHIP VALIDATION
+================================================================================
+✓ department.hid -> hospital.id: Valid (no orphaned records)
+✓ patient.uid -> user.id: Valid (no orphaned records)
+✓ patientlist.aid -> appointment.id: Valid (no orphaned records)
+✓ patientlist.pid -> patient.id: Valid (no orphaned records)
+
+================================================================================
+DATA TYPE VALIDATION
+================================================================================
+✓ Hospital table: 2 records with valid names
+✓ Patient dates: All valid (no future dates)
+✓ Doctor ratings: All valid (0-5 range)
+
+================================================================================
+SAMPLE DATA VALIDATION
+================================================================================
+✓ Sample hospital record matches
+
+================================================================================
+CONSISTENCY CHECK SUMMARY
+================================================================================
+
+Total Errors: 0
+Total Warnings: 0
+
+✓✓✓ MIGRATION SUCCESSFUL - NO CRITICAL ERRORS ✓✓✓

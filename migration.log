@@ -1,0 +1,203 @@
+[2026-05-09 19:13:52] [INFO] PostgreSQL Connection: postgres@localhost:5432/onlinebooking
+[2026-05-09 19:14:12] [ERROR] Failed to setup PostgreSQL database: connection timeout expired
+Multiple connection attempts failed. All failures were:
+- host: 'localhost', port: 5432, hostaddr: '::1': connection timeout expired
+- host: 'localhost', port: 5432, hostaddr: '127.0.0.1': connection timeout expired
+[2026-05-09 19:14:12] [ERROR] Failed to setup PostgreSQL database
+[2026-05-09 19:14:12] [INFO] 
+================================================================================
+MIGRATION SUMMARY
+================================================================================
+Duration: 0:00:20.048330
+Total Errors: 2
+Total Warnings: 0
+================================================================================
+
+[2026-05-09 19:14:12] [ERROR] ERRORS:
+[2026-05-09 19:14:12] [ERROR]   - Failed to setup PostgreSQL database: connection timeout expired
+Multiple connection attempts failed. All failures were:
+- host: 'localhost', port: 5432, hostaddr: '::1': connection timeout expired
+- host: 'localhost', port: 5432, hostaddr: '127.0.0.1': connection timeout expired
+[2026-05-09 19:14:12] [ERROR]   - Failed to setup PostgreSQL database
+[2026-05-09 19:19:32] [INFO] PostgreSQL Connection: postgres@db.stpowaxbrnwtwjmzpvim.supabase.co:5432/postgres
+[2026-05-09 19:19:32] [ERROR] Failed to setup PostgreSQL database: failed to resolve host 'db.stpowaxbrnwtwjmzpvim.supabase.co': [Errno 11001] getaddrinfo failed
+[2026-05-09 19:19:32] [ERROR] Failed to setup PostgreSQL database
+[2026-05-09 19:19:32] [INFO] 
+================================================================================
+MIGRATION SUMMARY
+================================================================================
+Duration: 0:00:00.069651
+Total Errors: 2
+Total Warnings: 0
+================================================================================
+
+[2026-05-09 19:19:32] [ERROR] ERRORS:
+[2026-05-09 19:19:32] [ERROR]   - Failed to setup PostgreSQL database: failed to resolve host 'db.stpowaxbrnwtwjmzpvim.supabase.co': [Errno 11001] getaddrinfo failed
+[2026-05-09 19:19:32] [ERROR]   - Failed to setup PostgreSQL database
+[2026-05-09 19:45:09] [INFO] PostgreSQL Connection: postgres@db.stpowaxbrnwtwjmzpvim.supabase.co:5432/postgres
+[2026-05-09 19:45:11] [INFO] PostgreSQL database ready using DATABASE_URL
+[2026-05-09 19:45:11] [INFO] Connected to SQLite database: instance/onlinebooking.sqlite3
+[2026-05-09 19:45:12] [INFO] Connected to PostgreSQL using DATABASE_URL
+[2026-05-09 19:45:12] [INFO] Found 10 tables in SQLite: ['hospital', 'doctor', 'user', 'department', 'patient', 'days', 'slots', 'appointment', 'deptdoc', 'patientlist']
+[2026-05-09 19:45:12] [INFO] Created table: hospital
+[2026-05-09 19:45:12] [INFO] Created table: doctor
+[2026-05-09 19:45:12] [ERROR] Failed to create tables in PostgreSQL: syntax error at or near "user"
+LINE 1: CREATE TABLE IF NOT EXISTS user (
+                                   ^
+[2026-05-09 19:45:13] [INFO] 
+================================================================================
+MIGRATION SUMMARY
+================================================================================
+Duration: 0:00:03.247685
+Total Errors: 1
+Total Warnings: 0
+================================================================================
+
+[2026-05-09 19:45:13] [ERROR] ERRORS:
+[2026-05-09 19:45:13] [ERROR]   - Failed to create tables in PostgreSQL: syntax error at or near "user"
+LINE 1: CREATE TABLE IF NOT EXISTS user (
+                                   ^
+[2026-05-09 19:47:17] [INFO] PostgreSQL Connection: postgres@db.stpowaxbrnwtwjmzpvim.supabase.co:5432/postgres
+[2026-05-09 19:47:18] [INFO] PostgreSQL database ready using DATABASE_URL
+[2026-05-09 19:47:18] [INFO] Connected to SQLite database: instance/onlinebooking.sqlite3
+[2026-05-09 19:47:19] [INFO] Connected to PostgreSQL using DATABASE_URL
+[2026-05-09 19:47:19] [INFO] Found 10 tables in SQLite: ['hospital', 'doctor', 'user', 'department', 'patient', 'days', 'slots', 'appointment', 'deptdoc', 'patientlist']
+[2026-05-09 19:47:20] [INFO] Created table: hospital
+[2026-05-09 19:47:20] [INFO] Created table: doctor
+[2026-05-09 19:47:20] [INFO] Created table: user
+[2026-05-09 19:47:20] [INFO] Created table: department
+[2026-05-09 19:47:20] [INFO] Created table: patient
+[2026-05-09 19:47:20] [INFO] Created table: days
+[2026-05-09 19:47:21] [INFO] Created table: slots
+[2026-05-09 19:47:21] [INFO] Created table: appointment
+[2026-05-09 19:47:21] [INFO] Created table: deptdoc
+[2026-05-09 19:47:21] [INFO] Created table: patientlist
+[2026-05-09 19:47:21] [INFO] All tables created successfully in PostgreSQL
+[2026-05-09 19:47:21] [INFO] Found 10 tables in SQLite: ['hospital', 'doctor', 'user', 'department', 'patient', 'days', 'slots', 'appointment', 'deptdoc', 'patientlist']
+[2026-05-09 19:47:21] [INFO] Starting migration of 10 tables...
+[2026-05-09 19:47:21] [INFO] Migrating table: hospital
+[2026-05-09 19:47:22] [INFO] Migrated 2 rows to hospital
+[2026-05-09 19:47:22] [INFO] Migrating table: doctor
+[2026-05-09 19:47:22] [INFO] Migrated 68 rows to doctor
+[2026-05-09 19:47:22] [INFO] Migrating table: user
+[2026-05-09 19:47:23] [ERROR] Failed to migrate data for user: column "verified" is of type boolean but expression is of type smallint
+LINE 1: ... "otp", "verified") VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
+                                                                   ^
+HINT:  You will need to rewrite or cast the expression.
+[2026-05-09 19:47:23] [INFO] Migrating table: department
+[2026-05-09 19:47:24] [INFO] Migrated 5 rows to department
+[2026-05-09 19:47:24] [INFO] Migrating table: patient
+[2026-05-09 19:47:24] [INFO] Migrated 9 rows to patient
+[2026-05-09 19:47:24] [INFO] Migrating table: days
+[2026-05-09 19:47:25] [INFO] Migrated 5 rows to days
+[2026-05-09 19:47:25] [INFO] Migrating table: slots
+[2026-05-09 19:47:26] [INFO] Migrated 6 rows to slots
+[2026-05-09 19:47:26] [INFO] Migrating table: appointment
+[2026-05-09 19:47:26] [ERROR] Failed to migrate data for appointment: column "availability" is of type boolean but expression is of type smallint
+LINE 1: ...ty", "tokenCount", "message") VALUES ($1, $2, $3, $4, $5, $6...
+                                                             ^
+HINT:  You will need to rewrite or cast the expression.
+[2026-05-09 19:47:26] [INFO] Migrating table: deptdoc
+[2026-05-09 19:47:27] [INFO] Migrated 4 rows to deptdoc
+[2026-05-09 19:47:27] [INFO] Migrating table: patientlist
+[2026-05-09 19:47:27] [INFO] Migrated 13 rows to patientlist
+[2026-05-09 19:47:27] [INFO] Data migration completed
+[2026-05-09 19:47:27] [INFO] Starting migration validation...
+[2026-05-09 19:47:27] [INFO] Found 10 tables in SQLite: ['hospital', 'doctor', 'user', 'department', 'patient', 'days', 'slots', 'appointment', 'deptdoc', 'patientlist']
+[2026-05-09 19:47:28] [INFO] ✓ hospital: 2 rows match
+[2026-05-09 19:47:28] [INFO] ✓ doctor: 68 rows match
+[2026-05-09 19:47:28] [WARNING] ✗ user: SQLite=4, PostgreSQL=0
+[2026-05-09 19:47:28] [INFO] ✓ department: 5 rows match
+[2026-05-09 19:47:29] [INFO] ✓ patient: 9 rows match
+[2026-05-09 19:47:29] [INFO] ✓ days: 5 rows match
+[2026-05-09 19:47:29] [INFO] ✓ slots: 6 rows match
+[2026-05-09 19:47:29] [WARNING] ✗ appointment: SQLite=50, PostgreSQL=0
+[2026-05-09 19:47:29] [INFO] ✓ deptdoc: 4 rows match
+[2026-05-09 19:47:29] [INFO] ✓ patientlist: 13 rows match
+[2026-05-09 19:47:29] [WARNING] ✗ SOME VALIDATIONS FAILED - Review differences above
+[2026-05-09 19:47:29] [INFO] Database connections closed
+[2026-05-09 19:47:29] [INFO] 
+================================================================================
+MIGRATION SUMMARY
+================================================================================
+Duration: 0:00:12.466791
+Total Errors: 2
+Total Warnings: 3
+================================================================================
+
+[2026-05-09 19:47:29] [ERROR] ERRORS:
+[2026-05-09 19:47:29] [ERROR]   - Failed to migrate data for user: column "verified" is of type boolean but expression is of type smallint
+LINE 1: ... "otp", "verified") VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
+                                                                   ^
+HINT:  You will need to rewrite or cast the expression.
+[2026-05-09 19:47:29] [ERROR]   - Failed to migrate data for appointment: column "availability" is of type boolean but expression is of type smallint
+LINE 1: ...ty", "tokenCount", "message") VALUES ($1, $2, $3, $4, $5, $6...
+                                                             ^
+HINT:  You will need to rewrite or cast the expression.
+[2026-05-09 19:47:29] [WARNING] WARNINGS:
+[2026-05-09 19:47:29] [WARNING]   - ✗ user: SQLite=4, PostgreSQL=0
+[2026-05-09 19:47:29] [WARNING]   - ✗ appointment: SQLite=50, PostgreSQL=0
+[2026-05-09 19:47:29] [WARNING]   - ✗ SOME VALIDATIONS FAILED - Review differences above
+[2026-05-09 19:47:58] [INFO] PostgreSQL Connection: postgres@db.stpowaxbrnwtwjmzpvim.supabase.co:5432/postgres
+[2026-05-09 19:47:59] [INFO] PostgreSQL database ready using DATABASE_URL
+[2026-05-09 19:47:59] [INFO] Connected to SQLite database: instance/onlinebooking.sqlite3
+[2026-05-09 19:48:00] [INFO] Connected to PostgreSQL using DATABASE_URL
+[2026-05-09 19:48:00] [INFO] Found 10 tables in SQLite: ['hospital', 'doctor', 'user', 'department', 'patient', 'days', 'slots', 'appointment', 'deptdoc', 'patientlist']
+[2026-05-09 19:48:01] [INFO] Created table: hospital
+[2026-05-09 19:48:01] [INFO] Created table: doctor
+[2026-05-09 19:48:01] [INFO] Created table: user
+[2026-05-09 19:48:01] [INFO] Created table: department
+[2026-05-09 19:48:02] [INFO] Created table: patient
+[2026-05-09 19:48:02] [INFO] Created table: days
+[2026-05-09 19:48:02] [INFO] Created table: slots
+[2026-05-09 19:48:02] [INFO] Created table: appointment
+[2026-05-09 19:48:02] [INFO] Created table: deptdoc
+[2026-05-09 19:48:03] [INFO] Created table: patientlist
+[2026-05-09 19:48:03] [INFO] All tables created successfully in PostgreSQL
+[2026-05-09 19:48:03] [INFO] Found 10 tables in SQLite: ['hospital', 'doctor', 'user', 'department', 'patient', 'days', 'slots', 'appointment', 'deptdoc', 'patientlist']
+[2026-05-09 19:48:03] [INFO] Starting migration of 10 tables...
+[2026-05-09 19:48:03] [INFO] Reset PostgreSQL tables before migration
+[2026-05-09 19:48:03] [INFO] Migrating table: hospital
+[2026-05-09 19:48:04] [INFO] Migrated 2 rows to hospital
+[2026-05-09 19:48:04] [INFO] Migrating table: doctor
+[2026-05-09 19:48:05] [INFO] Migrated 68 rows to doctor
+[2026-05-09 19:48:05] [INFO] Migrating table: user
+[2026-05-09 19:48:05] [INFO] Migrated 4 rows to user
+[2026-05-09 19:48:05] [INFO] Migrating table: department
+[2026-05-09 19:48:06] [INFO] Migrated 5 rows to department
+[2026-05-09 19:48:06] [INFO] Migrating table: patient
+[2026-05-09 19:48:07] [INFO] Migrated 9 rows to patient
+[2026-05-09 19:48:07] [INFO] Migrating table: days
+[2026-05-09 19:48:07] [INFO] Migrated 5 rows to days
+[2026-05-09 19:48:07] [INFO] Migrating table: slots
+[2026-05-09 19:48:08] [INFO] Migrated 6 rows to slots
+[2026-05-09 19:48:08] [INFO] Migrating table: appointment
+[2026-05-09 19:48:08] [INFO] Migrated 50 rows to appointment
+[2026-05-09 19:48:08] [INFO] Migrating table: deptdoc
+[2026-05-09 19:48:09] [INFO] Migrated 4 rows to deptdoc
+[2026-05-09 19:48:09] [INFO] Migrating table: patientlist
+[2026-05-09 19:48:10] [INFO] Migrated 13 rows to patientlist
+[2026-05-09 19:48:10] [INFO] Data migration completed
+[2026-05-09 19:48:10] [INFO] Starting migration validation...
+[2026-05-09 19:48:10] [INFO] Found 10 tables in SQLite: ['hospital', 'doctor', 'user', 'department', 'patient', 'days', 'slots', 'appointment', 'deptdoc', 'patientlist']
+[2026-05-09 19:48:10] [INFO] ✓ hospital: 2 rows match
+[2026-05-09 19:48:10] [INFO] ✓ doctor: 68 rows match
+[2026-05-09 19:48:10] [INFO] ✓ user: 4 rows match
+[2026-05-09 19:48:11] [INFO] ✓ department: 5 rows match
+[2026-05-09 19:48:11] [INFO] ✓ patient: 9 rows match
+[2026-05-09 19:48:11] [INFO] ✓ days: 5 rows match
+[2026-05-09 19:48:11] [INFO] ✓ slots: 6 rows match
+[2026-05-09 19:48:11] [INFO] ✓ appointment: 50 rows match
+[2026-05-09 19:48:12] [INFO] ✓ deptdoc: 4 rows match
+[2026-05-09 19:48:12] [INFO] ✓ patientlist: 13 rows match
+[2026-05-09 19:48:12] [INFO] ✓ ALL VALIDATIONS PASSED
+[2026-05-09 19:48:12] [INFO] Database connections closed
+[2026-05-09 19:48:12] [INFO] 
+================================================================================
+MIGRATION SUMMARY
+================================================================================
+Duration: 0:00:13.899379
+Total Errors: 0
+Total Warnings: 0
+================================================================================
+
