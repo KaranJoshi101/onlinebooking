@@ -5,12 +5,25 @@ Safely migrates data from SQLite to PostgreSQL with comprehensive error handling
 """
 
 import sqlite3
-import psycopg2
-from psycopg2.extras import execute_values
+import psycopg
 import os
 import sys
+import socket
+import subprocess
+import re
+import ipaddress
 from datetime import datetime, date, time
 from pathlib import Path
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+
+def quote_identifier(name):
+    return '"' + name.replace('"', '""') + '"'
 
 class MigrationLogger:
     """Logs migration progress and errors"""
@@ -71,6 +84,9 @@ class SQLiteToPostgreMigrator:
         self.sqlite_conn = None
         self.pg_conn = None
         self.migration_stats = {}
+
+    def get_database_url(self):
+        return os.getenv('DATABASE_URL', '').strip()
         
     def connect_sqlite(self):
         """Connect to SQLite database"""
@@ -86,18 +102,70 @@ class SQLiteToPostgreMigrator:
     def connect_postgres(self):
         """Connect to PostgreSQL database"""
         try:
-            self.pg_conn = psycopg2.connect(
-                user=self.pg_user,
-                password=self.pg_password,
-                host=self.pg_host,
-                port=self.pg_port,
-                database=self.pg_db
-            )
-            self.logger.log(f"Connected to PostgreSQL: {self.pg_host}:{self.pg_port}/{self.pg_db}")
+            database_url = self.get_database_url()
+            if database_url:
+                self.pg_conn = psycopg.connect(database_url, connect_timeout=10)
+                self.logger.log("Connected to PostgreSQL using DATABASE_URL")
+            else:
+                resolved_host = self.resolve_host(self.pg_host)
+                self.pg_conn = psycopg.connect(
+                    user=self.pg_user,
+                    password=self.pg_password,
+                    host=self.pg_host,
+                    hostaddr=resolved_host,
+                    port=self.pg_port,
+                    dbname=self.pg_db,
+                    sslmode='require',
+                    connect_timeout=10
+                )
+                self.logger.log(f"Connected to PostgreSQL: {self.pg_host} ({resolved_host}):{self.pg_port}/{self.pg_db}")
             return True
-        except psycopg2.Error as e:
+        except psycopg.Error as e:
             self.logger.error(f"Failed to connect to PostgreSQL: {e}")
             return False
+        except socket.gaierror as e:
+            self.logger.error(f"Failed to resolve PostgreSQL host: {e}")
+            return False
+
+    def resolve_host(self, hostname):
+        def valid_ip(candidate: str) -> bool:
+            ip = ipaddress.ip_address(candidate)
+            return not (ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast)
+
+        def parse_answer_address(output: str):
+            capture = False
+            for line in output.splitlines():
+                stripped = line.strip()
+                if stripped.lower().startswith('name:'):
+                    capture = True
+                    continue
+                if capture and stripped.lower().startswith('address:'):
+                    match = re.search(r'(?:\d{1,3}\.){3}\d{1,3}', stripped)
+                    if match:
+                        candidate = match.group(0)
+                        if valid_ip(candidate):
+                            return candidate
+            return None
+
+        try:
+            candidate = socket.gethostbyname(hostname)
+            if valid_ip(candidate):
+                return candidate
+        except socket.gaierror:
+            pass
+
+        for dns_server in ('1.1.1.1', '8.8.8.8'):
+            result = subprocess.run(['nslookup', hostname, dns_server], capture_output=True, text=True, check=False)
+            candidate = parse_answer_address(result.stdout)
+            if candidate:
+                return candidate
+
+        result = subprocess.run(['nslookup', hostname], capture_output=True, text=True, check=False)
+        candidate = parse_answer_address(result.stdout)
+        if candidate:
+            return candidate
+
+        raise socket.gaierror(f'No public IP found for {hostname}')
     
     def get_sqlite_tables(self):
         """Get all table names from SQLite"""
@@ -115,7 +183,7 @@ class SQLiteToPostgreMigrator:
         """Get column information for a table"""
         try:
             cursor = self.sqlite_conn.cursor()
-            cursor.execute(f"PRAGMA table_info({table_name});")
+            cursor.execute(f"PRAGMA table_info({quote_identifier(table_name)});")
             columns = cursor.fetchall()
             return columns
         except sqlite3.Error as e:
@@ -153,7 +221,7 @@ class SQLiteToPostgreMigrator:
                     continue
                 
                 # Build CREATE TABLE statement
-                create_sql = f"CREATE TABLE IF NOT EXISTS {table} (\n"
+                create_sql = f"CREATE TABLE IF NOT EXISTS {quote_identifier(table)} (\n"
                 columns = []
                 
                 for col in schema:
@@ -162,7 +230,7 @@ class SQLiteToPostgreMigrator:
                     col_notnull = "NOT NULL" if col[3] else ""
                     col_pk = "PRIMARY KEY" if col[5] else ""
                     
-                    col_def = f"  {col_name} {col_type}"
+                    col_def = f"  {quote_identifier(col_name)} {col_type}"
                     if col_pk:
                         col_def += f" {col_pk}"
                     if col_notnull:
@@ -179,7 +247,7 @@ class SQLiteToPostgreMigrator:
             self.pg_conn.commit()
             self.logger.log("All tables created successfully in PostgreSQL")
             return True
-        except psycopg2.Error as e:
+        except psycopg.Error as e:
             self.logger.error(f"Failed to create tables in PostgreSQL: {e}")
             self.pg_conn.rollback()
             return False
@@ -189,7 +257,7 @@ class SQLiteToPostgreMigrator:
         try:
             # Get data from SQLite
             sqlite_cursor = self.sqlite_conn.cursor()
-            sqlite_cursor.execute(f"SELECT * FROM {table_name};")
+            sqlite_cursor.execute(f"SELECT * FROM {quote_identifier(table_name)};")
             rows = sqlite_cursor.fetchall()
             
             if not rows:
@@ -200,26 +268,35 @@ class SQLiteToPostgreMigrator:
             # Get column names
             schema = self.get_table_schema(table_name)
             column_names = [col[1] for col in schema]
+            column_types = {col[1]: col[2].upper() for col in schema}
             
             # Prepare INSERT statement
             placeholders = ', '.join(['%s'] * len(column_names))
-            insert_sql = f"INSERT INTO {table_name} ({', '.join(column_names)}) VALUES ({placeholders});"
+            insert_sql = f"INSERT INTO {quote_identifier(table_name)} ({', '.join(quote_identifier(column) for column in column_names)}) VALUES ({placeholders});"
             
             # Convert data types if needed
             converted_rows = []
             for row in rows:
                 converted_row = []
                 for i, value in enumerate(row):
+                    column_name = column_names[i]
+                    column_type = column_types.get(column_name, '')
+
                     # Handle NULL values
                     if value is None:
                         converted_row.append(None)
+                    elif 'BOOL' in column_type:
+                        if isinstance(value, str):
+                            converted_row.append(value.lower() in ('1', 'true', 't', 'yes', 'y'))
+                        else:
+                            converted_row.append(bool(value))
                     else:
                         converted_row.append(value)
                 converted_rows.append(tuple(converted_row))
             
             # Insert data into PostgreSQL
             pg_cursor = self.pg_conn.cursor()
-            execute_values(pg_cursor, insert_sql, converted_rows, page_size=100)
+            pg_cursor.executemany(insert_sql, converted_rows)
             self.pg_conn.commit()
             
             row_count = len(converted_rows)
@@ -237,6 +314,8 @@ class SQLiteToPostgreMigrator:
         tables = self.get_sqlite_tables()
         
         self.logger.log(f"Starting migration of {len(tables)} tables...")
+
+        self.reset_postgres_tables(tables)
         
         for table in tables:
             self.logger.log(f"Migrating table: {table}")
@@ -244,6 +323,19 @@ class SQLiteToPostgreMigrator:
         
         self.logger.log("Data migration completed")
         return True
+
+    def reset_postgres_tables(self, tables):
+        """Remove existing PostgreSQL rows before reloading data."""
+        try:
+            cursor = self.pg_conn.cursor()
+            quoted_tables = ', '.join(quote_identifier(table) for table in tables)
+            cursor.execute(f"TRUNCATE TABLE {quoted_tables} RESTART IDENTITY CASCADE;")
+            self.pg_conn.commit()
+            self.logger.log("Reset PostgreSQL tables before migration")
+        except Exception as e:
+            self.logger.error(f"Failed to reset PostgreSQL tables: {e}")
+            self.pg_conn.rollback()
+            raise
     
     def validate_migration(self):
         """Validate that migration was successful"""
@@ -258,10 +350,10 @@ class SQLiteToPostgreMigrator:
             
             for table in tables:
                 # Get row counts
-                sqlite_cursor.execute(f"SELECT COUNT(*) FROM {table};")
+                sqlite_cursor.execute(f"SELECT COUNT(*) FROM {quote_identifier(table)};")
                 sqlite_count = sqlite_cursor.fetchone()[0]
                 
-                pg_cursor.execute(f"SELECT COUNT(*) FROM {table};")
+                pg_cursor.execute(f"SELECT COUNT(*) FROM {quote_identifier(table)};")
                 pg_count = pg_cursor.fetchone()[0]
                 
                 if sqlite_count == pg_count:
@@ -318,27 +410,52 @@ class SQLiteToPostgreMigrator:
 def setup_postgres_database(pg_user, pg_password, pg_host, pg_port, pg_db, logger):
     """Create PostgreSQL database if it doesn't exist"""
     try:
+        database_url = os.getenv('DATABASE_URL', '').strip()
+        if database_url:
+            conn = psycopg.connect(database_url, connect_timeout=10)
+            conn.autocommit = True
+            cursor = conn.cursor()
+            logger.log("PostgreSQL database ready using DATABASE_URL")
+            cursor.close()
+            conn.close()
+            return True
+
+        resolved_host = None
+        try:
+            resolved_host = socket.gethostbyname(pg_host)
+        except socket.gaierror:
+            result = subprocess.run(['nslookup', pg_host], capture_output=True, text=True, check=False)
+            matches = re.findall(r'(?:\d{1,3}\.){3}\d{1,3}', result.stdout)
+            if matches:
+                resolved_host = matches[-1]
+            else:
+                raise
         # Connect to default postgres database
-        conn = psycopg2.connect(
+        conn = psycopg.connect(
             user=pg_user,
             password=pg_password,
             host=pg_host,
+            hostaddr=resolved_host,
             port=pg_port,
-            database='postgres',
+            dbname='postgres',
+            sslmode='require',
             connect_timeout=10
         )
         conn.autocommit = True
         cursor = conn.cursor()
         
         # For Supabase, database 'postgres' already exists, so we just use it
-        logger.log(f"PostgreSQL database ready: {pg_db}")
+        logger.log(f"PostgreSQL database ready: {pg_db} ({resolved_host})")
         
         cursor.close()
         conn.close()
         return True
     
-    except psycopg2.Error as e:
+    except psycopg.Error as e:
         logger.error(f"Failed to setup PostgreSQL database: {e}")
+        return False
+    except socket.gaierror as e:
+        logger.error(f"Failed to resolve PostgreSQL host: {e}")
         return False
 
 

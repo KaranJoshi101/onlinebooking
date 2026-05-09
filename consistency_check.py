@@ -5,11 +5,25 @@ Validates data integrity between SQLite and PostgreSQL after migration
 """
 
 import sqlite3
-import psycopg2
+import psycopg
 import os
 import sys
+import socket
+import subprocess
+import re
+import ipaddress
 from datetime import datetime
 from typing import Tuple, List, Dict
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+
+def quote_identifier(name):
+    return '"' + name.replace('"', '""') + '"'
 
 class ConsistencyChecker:
     """Validates database consistency after migration"""
@@ -26,6 +40,9 @@ class ConsistencyChecker:
         self.report = []
         self.errors = []
         self.warnings = []
+
+    def get_database_url(self):
+        return os.getenv('DATABASE_URL', '').strip()
         
     def add_report(self, message: str):
         """Add message to report"""
@@ -57,17 +74,71 @@ class ConsistencyChecker:
             return False
         
         try:
-            self.pg_conn = psycopg2.connect(
-                user=self.pg_user,
-                password=self.pg_password,
-                host=self.pg_host,
-                port=self.pg_port,
-                database=self.pg_db
-            )
-            self.add_success(f"Connected to PostgreSQL: {self.pg_host}:{self.pg_port}/{self.pg_db}")
-        except psycopg2.Error as e:
+            database_url = self.get_database_url()
+            if database_url:
+                self.pg_conn = psycopg.connect(database_url, connect_timeout=10)
+                self.add_success("Connected to PostgreSQL using DATABASE_URL")
+            else:
+                resolved_host = self.resolve_host(self.pg_host)
+                self.pg_conn = psycopg.connect(
+                    user=self.pg_user,
+                    password=self.pg_password,
+                    host=self.pg_host,
+                    hostaddr=resolved_host,
+                    port=self.pg_port,
+                    dbname=self.pg_db,
+                    sslmode='require',
+                    connect_timeout=10
+                )
+                self.add_success(f"Connected to PostgreSQL: {self.pg_host} ({resolved_host}):{self.pg_port}/{self.pg_db}")
+        except psycopg.Error as e:
             self.add_error(f"PostgreSQL connection failed: {e}")
             return False
+        except socket.gaierror as e:
+            self.add_error(f"PostgreSQL host resolution failed: {e}")
+            return False
+
+        return True
+
+    def resolve_host(self, hostname):
+        def valid_ip(candidate: str) -> bool:
+            ip = ipaddress.ip_address(candidate)
+            return not (ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast)
+
+        def parse_answer_address(output: str):
+            capture = False
+            for line in output.splitlines():
+                stripped = line.strip()
+                if stripped.lower().startswith('name:'):
+                    capture = True
+                    continue
+                if capture and stripped.lower().startswith('address:'):
+                    match = re.search(r'(?:\d{1,3}\.){3}\d{1,3}', stripped)
+                    if match:
+                        candidate = match.group(0)
+                        if valid_ip(candidate):
+                            return candidate
+            return None
+
+        try:
+            candidate = socket.gethostbyname(hostname)
+            if valid_ip(candidate):
+                return candidate
+        except socket.gaierror:
+            pass
+
+        for dns_server in ('1.1.1.1', '8.8.8.8'):
+            result = subprocess.run(['nslookup', hostname, dns_server], capture_output=True, text=True, check=False)
+            candidate = parse_answer_address(result.stdout)
+            if candidate:
+                return candidate
+
+        result = subprocess.run(['nslookup', hostname], capture_output=True, text=True, check=False)
+        candidate = parse_answer_address(result.stdout)
+        if candidate:
+            return candidate
+
+        raise socket.gaierror(f'No public IP found for {hostname}')
         
         return True
     
@@ -118,11 +189,11 @@ class ConsistencyChecker:
             total_postgres = 0
             
             for table in tables:
-                sqlite_cursor.execute(f"SELECT COUNT(*) FROM {table};")
+                sqlite_cursor.execute(f"SELECT COUNT(*) FROM {quote_identifier(table)};")
                 sqlite_count = sqlite_cursor.fetchone()[0]
                 
                 pg_cursor = self.pg_conn.cursor()
-                pg_cursor.execute(f"SELECT COUNT(*) FROM {table};")
+                pg_cursor.execute(f"SELECT COUNT(*) FROM {quote_identifier(table)};")
                 pg_count = pg_cursor.fetchone()[0]
                 
                 total_sqlite += sqlite_count
@@ -162,7 +233,7 @@ class ConsistencyChecker:
             
             for table in tables:
                 # SQLite column count
-                sqlite_cursor.execute(f"PRAGMA table_info({table});")
+                sqlite_cursor.execute(f"PRAGMA table_info({quote_identifier(table)});")
                 sqlite_cols = len(sqlite_cursor.fetchall())
                 
                 # PostgreSQL column count
@@ -189,39 +260,45 @@ class ConsistencyChecker:
         self.add_report("\n" + "="*80)
         self.add_report("PRIMARY KEY VALIDATION")
         self.add_report("="*80)
-        
+
         try:
             sqlite_cursor = self.sqlite_conn.cursor()
             sqlite_cursor.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
             tables = [row[0] for row in sqlite_cursor.fetchall()]
-            
+
             all_valid = True
-            
+
             for table in tables:
-                # Get SQLite primary keys
-                sqlite_cursor.execute(f"PRAGMA table_info({table});")
-                sqlite_pks = [row[1] for row in sqlite_cursor.fetchall() if row[5]]
-                
-                # Get PostgreSQL primary keys
+                sqlite_cursor.execute(f"PRAGMA table_info({quote_identifier(table)});")
+                sqlite_pks = [row[1] for row in sqlite_cursor.fetchall() if row[5] == 1]
+
                 pg_cursor = self.pg_conn.cursor()
                 pg_cursor.execute(f"""
-                    SELECT a.attname
-                    FROM pg_index i
-                    JOIN pg_attribute a ON a.attrelid = i.indrelid
-                    AND a.attnum = ANY(i.indkey)
-                    WHERE i.indrelname = '{table}_pkey';
+                    SELECT kcu.column_name
+                    FROM information_schema.table_constraints tc
+                    JOIN information_schema.key_column_usage kcu
+                      ON tc.constraint_name = kcu.constraint_name
+                     AND tc.table_schema = kcu.table_schema
+                    WHERE tc.constraint_type = 'PRIMARY KEY'
+                      AND tc.table_name = '{table}'
+                    ORDER BY kcu.ordinal_position;
                 """)
                 pg_pks = [row[0] for row in pg_cursor.fetchall()]
-                
+
                 if sqlite_pks or pg_pks:
                     if sqlite_pks == pg_pks:
                         self.add_success(f"'{table}': Primary keys match")
                     else:
                         self.add_warning(f"'{table}': PK mismatch (may be expected)")
-            
-            return True
+                        all_valid = False
+
+            return all_valid
         except Exception as e:
             self.add_warning(f"Could not fully validate primary keys: {e}")
+            try:
+                self.pg_conn.rollback()
+            except Exception:
+                pass
             return True
     
     def check_foreign_keys(self) -> bool:
@@ -313,7 +390,7 @@ class ConsistencyChecker:
             pg_cursor = self.pg_conn.cursor()
             
             # Verify string fields contain expected data
-            pg_cursor.execute("SELECT COUNT(*) FROM hospital WHERE name IS NOT NULL;")
+            pg_cursor.execute(f"SELECT COUNT(*) FROM {quote_identifier('hospital')} WHERE {quote_identifier('name')} IS NOT NULL;")
             valid_hospitals = pg_cursor.fetchone()[0]
             self.add_success(f"Hospital table: {valid_hospitals} records with valid names")
             
@@ -355,15 +432,15 @@ class ConsistencyChecker:
             pg_cursor = self.pg_conn.cursor()
             
             # Check if data exists
-            sqlite_cursor.execute("SELECT COUNT(*) FROM hospital;")
+            sqlite_cursor.execute(f"SELECT COUNT(*) FROM {quote_identifier('hospital')};")
             hospital_count = sqlite_cursor.fetchone()[0]
             
             if hospital_count > 0:
                 # Get first hospital from both databases
-                sqlite_cursor.execute("SELECT id, name, state FROM hospital LIMIT 1;")
+                sqlite_cursor.execute(f"SELECT id, name, state FROM {quote_identifier('hospital')} LIMIT 1;")
                 sqlite_row = sqlite_cursor.fetchone()
                 
-                pg_cursor.execute("SELECT id, name, state FROM hospital LIMIT 1;")
+                pg_cursor.execute(f"SELECT id, name, state FROM {quote_identifier('hospital')} LIMIT 1;")
                 pg_row = pg_cursor.fetchone()
                 
                 if sqlite_row and pg_row:

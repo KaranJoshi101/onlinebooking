@@ -6,20 +6,70 @@ Run this from your local machine to test Supabase connectivity
 
 import os
 import sys
+import socket
+import subprocess
+import re
+import ipaddress
 
-# Supabase credentials
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+# Supabase credentials (loaded from .env when available)
 SUPABASE_CREDS = {
-    'user': 'postgres',
-    'password': 'a-g4SGTknzENbpu',
-    'host': 'db.stpowaxbrnwtwjmzpvim.supabase.co',
-    'port': '5432',
-    'database': 'postgres'
+    'user': os.getenv('DB_USER', 'postgres'),
+    'password': os.getenv('DB_PASSWORD', ''),
+    'host': os.getenv('DB_HOST', 'localhost'),
+    'port': os.getenv('DB_PORT', '5432'),
+    'database': os.getenv('DB_NAME', 'postgres')
 }
 
 def test_supabase_connection():
     """Test connection to Supabase PostgreSQL"""
     try:
-        import psycopg2
+        import psycopg
+
+        def resolve_host(hostname: str) -> str:
+            def valid_ip(candidate: str) -> bool:
+                ip = ipaddress.ip_address(candidate)
+                return not (ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast)
+
+            def parse_answer_address(output: str):
+                capture = False
+                for line in output.splitlines():
+                    stripped = line.strip()
+                    if stripped.lower().startswith('name:'):
+                        capture = True
+                        continue
+                    if capture and stripped.lower().startswith('address:'):
+                        match = re.search(r'(?:\d{1,3}\.){3}\d{1,3}', stripped)
+                        if match:
+                            candidate = match.group(0)
+                            if valid_ip(candidate):
+                                return candidate
+                return None
+
+            try:
+                candidate = socket.gethostbyname(hostname)
+                if valid_ip(candidate):
+                    return candidate
+            except socket.gaierror:
+                pass
+
+            for dns_server in ('1.1.1.1', '8.8.8.8'):
+                result = subprocess.run(['nslookup', hostname, dns_server], capture_output=True, text=True, check=False)
+                candidate = parse_answer_address(result.stdout)
+                if candidate:
+                    return candidate
+
+            result = subprocess.run(['nslookup', hostname], capture_output=True, text=True, check=False)
+            candidate = parse_answer_address(result.stdout)
+            if candidate:
+                return candidate
+
+            raise socket.gaierror(f'No public IP found for {hostname}')
         
         print("=" * 80)
         print("Supabase PostgreSQL Connection Test")
@@ -28,22 +78,33 @@ def test_supabase_connection():
         
         # Display connection info
         print("Connection Details:")
-        print(f"  Host: {SUPABASE_CREDS['host']}")
-        print(f"  Port: {SUPABASE_CREDS['port']}")
-        print(f"  User: {SUPABASE_CREDS['user']}")
-        print(f"  Database: {SUPABASE_CREDS['database']}")
+        database_url = os.getenv('DATABASE_URL', '').strip()
+        if database_url:
+            print("  Using DATABASE_URL from .env")
+        else:
+            print(f"  Host: {SUPABASE_CREDS['host']}")
+            print(f"  Port: {SUPABASE_CREDS['port']}")
+            print(f"  User: {SUPABASE_CREDS['user']}")
+            print(f"  Database: {SUPABASE_CREDS['database']}")
         print()
         
         # Connect
         print("Connecting to Supabase...")
-        conn = psycopg2.connect(
-            user=SUPABASE_CREDS['user'],
-            password=SUPABASE_CREDS['password'],
-            host=SUPABASE_CREDS['host'],
-            port=SUPABASE_CREDS['port'],
-            database=SUPABASE_CREDS['database'],
-            connect_timeout=10
-        )
+        if database_url:
+            conn = psycopg.connect(database_url, connect_timeout=10)
+        else:
+            resolved_host = resolve_host(SUPABASE_CREDS['host'])
+            print(f"  Resolved IP: {resolved_host}")
+            conn = psycopg.connect(
+                user=SUPABASE_CREDS['user'],
+                password=SUPABASE_CREDS['password'],
+                host=SUPABASE_CREDS['host'],
+                hostaddr=resolved_host,
+                port=SUPABASE_CREDS['port'],
+                dbname=SUPABASE_CREDS['database'],
+                sslmode='require',
+                connect_timeout=10
+            )
         
         print("✓ Connection successful!\n")
         
@@ -96,8 +157,13 @@ def test_supabase_connection():
         return True
         
     except ImportError:
-        print("✗ psycopg2 not installed")
-        print("Install it with: pip install psycopg2-binary")
+        print("✗ psycopg not installed")
+        print("Install it with: pip install 'psycopg[binary]'")
+        return False
+
+    except socket.gaierror as e:
+        print("✗ Host resolution failed before connection")
+        print(f"Error: {e}")
         return False
         
     except Exception as e:

@@ -13,19 +13,24 @@ except ImportError:
 def create_app():
     app = Flask(__name__)
 
+    database_url = os.getenv('DATABASE_URL', '').strip()
+
     # PostgreSQL Configuration (production)
-    # Format: postgresql://username:password@localhost:5432/dbname
-    db_user = os.getenv('DB_USER', 'postgres')
-    db_password = os.getenv('DB_PASSWORD', 'password')
-    db_host = os.getenv('DB_HOST', 'localhost')
-    db_port = os.getenv('DB_PORT', '5432')
-    db_name = os.getenv('DB_NAME', 'onlinebooking')
+    # Prefer a full DATABASE_URL from Supabase pooler settings when available.
+    if database_url:
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    else:
+        db_user = os.getenv('DB_USER', 'postgres')
+        db_password = os.getenv('DB_PASSWORD', 'password')
+        db_host = os.getenv('DB_HOST', 'localhost')
+        db_port = os.getenv('DB_PORT', '5432')
+        db_name = os.getenv('DB_NAME', 'onlinebooking')
     
     # Use PostgreSQL by default, fallback to SQLite for development
     use_postgres = os.getenv('USE_POSTGRES', 'True').lower() == 'true'
     
-    if use_postgres:
-        app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
+    if use_postgres and not database_url:
+        app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}?sslmode=require'
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///onlinebooking.sqlite3'
     
